@@ -1,0 +1,15 @@
+{
+	"conversation":
+	[
+		{
+			"id": 0,
+			"speaker": "Purple Square",
+			"sentences":
+			[
+				"See the green dude to our left <speed=3>. . .<speed=1>Oh wait, let me move him.<sendmessage=MoveGreenCharacter> BOOM!",
+				"I don't like green, let's try red<speed=3>. . .<sendmessage=ChangeGreenCharacter><speed=1>Wait, maybe green was better<sendmessage=ResetGreenSprite>.",
+				"That's not fair, let's put him back where he was<speed=3>. . . <sendmessage=ResetPosition><speed=1>That's better."
+			]
+		},
+	]
+}

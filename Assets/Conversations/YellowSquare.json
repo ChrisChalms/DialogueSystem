@@ -1,0 +1,67 @@
+{
+	"conversation":
+	[
+		{
+			"id": 0,
+			"speaker": "Yellow Square",
+			"sentences":
+            [
+				"Uhm..<speed=2>Hello?",
+				"Oh, I see. You want to see what I can do right?"
+			],
+			"options":
+			[
+				{
+					"nextId": 1,
+					"text": "Sure!"
+				},
+				{
+					"nextId": 2,
+					"text": "No thanks"
+				}
+			]
+		},
+
+		{
+			"id": 1,
+			"speaker": "Yellow Square",
+			"nextId": 3,
+			"sentences":
+			[
+				"Awesome! You're going to love this",
+				"I can speak <speed=4>super slow<speed=0.1>, or pretty fast!"
+			]
+		},
+
+		{
+			"id": 2,
+			"speaker": "Yellow Square",
+			"sentences":
+			[
+				"I see how it is"
+			]
+		},
+
+		{
+			"id": 3,
+			"autoProceed": true,
+			"speaker": "Yellow Square",
+			"nextId": 4,
+			"sentences":
+			[
+				"You better be watching, I'm going to automatically go to another conversation"
+			]
+		},
+
+		{
+			"id": 4,
+			"speaker": "Yellow Square",
+			"sentences": 
+			[
+				"Nothing...?",
+				"I can use <b>normal</b> <i>rich</i> <u>text</u> tags too!",
+				"I'm done, go speak to the next guy"
+			]
+		}
+	]
+}
