@@ -47,6 +47,8 @@ As well as the standard rich text tags, there's a few custom tags available. Hop
  - Custom tag to allow for waiting/pausing during dialogue
  - Conditional starting positions e.g. start at a different dialoue if a registered variable is a certain value
  - Some sort of OnStart, OnFinish optional action
+ - Would be nice to specify the target of the sendmessage tag in the dialogue JSON
+ - Could always support more varaible types for registration/retrieval
  
 ## Would be nice list, but probably never going to happen
 - A JSON conversation building
