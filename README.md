@@ -49,6 +49,8 @@ As well as the standard rich text tags, there's a few custom tags available. Hop
  - Some sort of OnStart, OnFinish optional action
  - Would be nice to specify the target of the sendmessage tag in the dialogue JSON
  - Could always support more varaible types for registration/retrieval
+ - Would like to add XML support
+ - Maybe some docs or a short walkthrough
  
 ## Would be nice list, but probably never going to happen
 - A JSON conversation building
