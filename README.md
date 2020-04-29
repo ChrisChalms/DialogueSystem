@@ -43,7 +43,8 @@ As well as the standard rich text tags, there's a few custom tags available. Hop
  
  ## TODO
  - ~~Proof of concept v 0.1~~
- - Add conversations to ConversationRepo and parse/validate in real time, not just on scene start
+ - ~~Add conversations to ConversationRepo and parse/validate in real time, not just on scene start~~
+ - ~~Add some sort of generic event trigger so the conversations can be added, loaded, and triggered without code~~
  - Custom tag to allow for waiting/pausing during dialogue
  - Conditional starting positions e.g. start at a different dialoue if a registered variable is a certain value
  - Some sort of OnStart, OnFinish optional action
@@ -53,5 +54,5 @@ As well as the standard rich text tags, there's a few custom tags available. Hop
  - Maybe some docs or a short walkthrough
  
 ## Would be nice list, but probably never going to happen
-- A JSON conversation building
+- Some sort of conversation builder. Currently you have to use an editor to make the JSON files at the moment
  
