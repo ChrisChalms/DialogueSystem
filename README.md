@@ -1,6 +1,7 @@
 # Dialogue System
 
 A simple dialogue system for Unity with support for richtext tags, custom tags, and variable registration/retrieval.
+[Video of v0.2 example scene](https://youtu.be/gQmucmzcbg0)
 
 ## Usage
 
