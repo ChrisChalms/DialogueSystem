@@ -23,11 +23,8 @@ public class ConversationRepo : MonoBehaviour
             _instance = this;
 
         new DialogueVariableRepo();
-    }
 
-    // Initialize
-    private void Start()
-    {
+        // Initialize early so it's ready for use in Start()
         _conversations = new Dictionary<string, Conversation>();
         _deserializer = new JSONDeserializer();
 
@@ -36,14 +33,39 @@ public class ConversationRepo : MonoBehaviour
 
     #endregion
 
-    // Parse the text assets
+    // Parse the text assets that have been assigned in the editor
     private void loadConversations()
     {
         foreach (var file in _conversationsToLoad)
         {
             var tempObject = _deserializer.Deserialize<Conversation>(file.text);
+            if (tempObject == null)
+            {
+                Debug.LogWarningFormat("There was an error deserializing file {0}", file.name);
+                return;
+            }
+
             if (valdateConversation(tempObject, file.name))
                 _conversations[file.name] = tempObject; // Overwrite without throwing
+        }
+    }
+
+    // Register and validate a conversation in real-time
+    public void RegisterConversation(string name, TextAsset file)
+    {
+        var tempObject = _deserializer.Deserialize<Conversation>(file.text);
+        if(tempObject == null)
+        {
+            Debug.LogWarningFormat("There was an error deserializing file {0}", file.name);
+            return;
+        }
+
+        if (valdateConversation(tempObject, file.name))
+        {
+            if (_conversations.ContainsKey(name))
+                Debug.LogWarningFormat("Conversation {0} already registered, overwritting", name);
+
+            _conversations[name] = tempObject;
         }
     }
 
