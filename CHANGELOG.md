@@ -2,6 +2,19 @@
 
 All notable changes will be documented here.
 
+## [v0.3](https://github.com/ChrisChalms/DialogueSystem/commit/26b7bbb7f7b2e8d54288ec38f70f8e87bfb77e1a) - 01/05/2020
+
+### Added
+- Simple and complex modification types
+
+### Changed
+- Changed the sendmessage tag to a complex modification, allowing you to specify a target object to be found for the message. e.g. <sendmessage=recievingGameObject>MessageToSend</sendmessage>
+- Modification registration and parsing is a little easier now
+- Example scene to show the changes of v0.3
+
+### Removed
+- The normal modification class. Not needed after introducing the simple and complex types
+
 ## [v0.2](https://github.com/ChrisChalms/DialogueSystem/commit/25fdb88b4f08347c3f379087a1ab0ca91152c52d) - 29/04/2020
 
 ### Added
