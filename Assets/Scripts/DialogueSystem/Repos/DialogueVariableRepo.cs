@@ -25,13 +25,12 @@ public class DialogueVariableRepo
     // Register a new variable if it doesn't exist
     public void Register<T>(string name, T variableValue)
     {
+        // Update Existing
         if (_variables.ContainsKey(name))
-        {
-            Debug.LogWarningFormat("Trying to register the variable {0}, with the value {1}, but it already exists", name, variableValue);
-            return;
-        }
-
-        _variables.Add(name, new DialogueVariable { Value = variableValue });
+            _variables[name].Value = variableValue;
+        // Add
+        else
+            _variables.Add(name, new DialogueVariable { Value = variableValue });
     }
 
     // Registration through the dialogue system will always be a string, preparse as variableType and register
