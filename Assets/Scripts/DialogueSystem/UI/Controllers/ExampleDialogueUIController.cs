@@ -96,14 +96,20 @@ public class ExampleDialogueUIController : BaseDialogueUIController
             var mods = textMods.GetAnyTextModsForPosition(i);
             foreach (var mod in mods)
             {
+                // Simple modifications e.g. <command=value>
                 if (mod.ModType == TextModifications.Modifications.SPEED)
                     _speedMultiplyer = mod.GetValue <float>();
+                // Complex modifications e.g. <command=value>content</command>
                 else if(mod.ModType == TextModifications.Modifications.SEND_MESSAGE)
                 {
-                    if (DialogueMessageTarget == null)
-                        SendMessage(mod.GetValue<string>(), SendMessageOptions.DontRequireReceiver);
-                    else
-                        DialogueMessageTarget.SendMessage(mod.GetValue<string>(), SendMessageOptions.DontRequireReceiver);
+                    var revievingObject = GameObject.Find(mod.GetValue<string>());
+                    if(revievingObject == null)
+                    {
+                        Debug.LogFormat("Trying to execute a send message command, but GameObject {0} was not found", mod.GetValue<string>());
+                        continue;
+                    }
+
+                    revievingObject.SendMessage((mod as ComplexModification).GetContent<string>(), SendMessageOptions.DontRequireReceiver);
                 }
             }
 

@@ -6,9 +6,11 @@
 			"speaker": "Purple Square",
 			"sentences":
 			[
-				"See the green dude to our left <speed=3>. . .<speed=1>Oh wait, let me move him.<sendmessage=MoveGreenCharacter> BOOM!",
-				"I don't like green, let's try red<speed=3>. . .<sendmessage=ChangeGreenCharacter><speed=1>Wait, maybe green was better<sendmessage=ResetGreenSprite>.",
-				"That's not fair, let's put him back where he was<speed=3>. . . <sendmessage=ResetPosition><speed=1>That's better."
+				"See the green dude to our left <speed=3>. . .<speed=1>Oh wait, let me move him.<sendmessage=Characters/Variables>MoveIntoView</sendmessage> BOOM!",
+				"That's not fair, let's put him back where he was<speed=3>. . . <sendmessage=Characters/Variables>ResetPosition</sendmessage><speed=1>That's better.",
+				"Pretty cool, right?! Now let's target a different object so you know I'm not cheating<speed=3>...<speed=1>Let's change the sky PINK<sendmessage=Main Camera>ChangeToPink</sendmessage>!",
+				"YEEEEESSS!",
+				"Now back to blue<sendmessage=Main Camera>ResetColour</sendmessage>."
 			]
 		},
 	]

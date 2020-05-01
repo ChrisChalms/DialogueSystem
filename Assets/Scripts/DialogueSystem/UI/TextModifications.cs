@@ -27,7 +27,7 @@ public class TextModifications
         REGISTER_STRING
     }
 
-    private List<Modification> _modifications;
+    private List<SimpleModification> _modifications;
     private string _strippedSentence;
 
     public string Sentence => _strippedSentence;
@@ -35,7 +35,7 @@ public class TextModifications
     // Initialize
     public TextModifications(string sentence)
 	{
-        _modifications = new List<Modification>();
+        _modifications = new List<SimpleModification>();
 
         parseSentenceForCustomTags(sentence);
     }
@@ -50,9 +50,9 @@ public class TextModifications
         var commandText = string.Empty;
 
         // For parsing registration tags
-        var parsingRegistration = false;
-        var registrationTagValue = string.Empty;
-        var registrationTagContent = string.Empty;
+        var parsingComplexTag = false;
+        var complexTagValue = string.Empty;
+        var complexTagContent = string.Empty;
 
         // Info about the tag and tags added so we can revert if it's not a custom tag
         var commandStarted = 0;
@@ -66,7 +66,7 @@ public class TextModifications
             if(sentence[i] == '<')
             {
                 parsingCommand = true;
-                parsingRegistration = false;
+                parsingComplexTag = false;
                 commandStarted = i - commandCharsAdded;
                 commandCharsAdded++;
                 continue;
@@ -83,35 +83,40 @@ public class TextModifications
                 // Check if retrieving variable or modifying something
                 if (tempType != Modifications.NOT_CUSTOM)
                 {
+                    // Variable Retrieval
                     if (isRetreivalMod(tempType))
                     {
                         // Replace text with retreived variable
                         _strippedSentence += getVariableFromRepo(tempType, commandText);
                         commandCharsAdded -= (commandText.Length - 2);
                     }
-                    else if(isRegistrationMod(tempType))
+                    // All other complex tags e.g. <command=value>content</command>
+                    else if(isComplexTag(tempType))
                     {
                         if (!isClosingTag(commandText))
                         {
                             // Start parsing
-                            parsingRegistration = true;
-                            registrationTagContent = string.Empty;
+                            parsingComplexTag = true;
+                            complexTagContent = string.Empty;
 
                             // Check it has a name=value pattern
                             var commandSplits = getTagNameValuePair(commandText, '=');
                             if (commandSplits == null)
                                 return;
-                            registrationTagValue = commandSplits[1];
+                            complexTagValue = commandSplits[1];
                         }
-                        // Register the variable
+                        // Register the variable or complex tag
                         else
                         {
-                            parsingRegistration = false;
-                            DialogueVariableRepo.Instance.Register(registrationTagValue, registrationTagContent, getRegistrationTypeCode(tempType));
+                            parsingComplexTag = false;
+                            if (isRegistrationTag(tempType))
+                                DialogueVariableRepo.Instance.Register(complexTagValue, complexTagContent, getRegistrationTypeCode(tempType));
+                            else
+                                registerComplexModification(tempType, complexTagValue, complexTagContent, commandStarted);
                         }
                     }
                     else
-                        registerModification(commandText, commandStarted);
+                        registerSimpleModification(commandText, commandStarted);
                 }
                 // Reset as if this didn't happen
                 else
@@ -125,22 +130,22 @@ public class TextModifications
             }
 
             // Add letter to the stripped sentence if we're not parsing
-            if (!parsingCommand && !parsingRegistration)
+            if (!parsingCommand && !parsingComplexTag)
                 _strippedSentence += sentence[i];
             // Add to the letter to the correct string
             else
             {
                 if (parsingCommand)
                     commandText += sentence[i];
-                else if (parsingRegistration)
-                    registrationTagContent += sentence[i];
+                else if (parsingComplexTag)
+                    complexTagContent += sentence[i];
                 commandCharsAdded++;
             }
         }
     }
 
-    // Parses and registers the command
-    private void registerModification(string command, int startingIndex)
+    // Parses and registers a simple modification 
+    private void registerSimpleModification(string command, int startingIndex)
     {
         var commandType = isCustomTag(command);
         if (commandType != Modifications.NOT_CUSTOM)
@@ -152,8 +157,23 @@ public class TextModifications
 
             var modValue = parseModValue(commandType, commandSplits[1]);
             if (modValue != null)
-                _modifications.Add(new Modification { Index = startingIndex, ModType = commandType, ModificationValue = modValue });
+                _modifications.Add(new SimpleModification { Index = startingIndex, ModType = commandType, ModificationValue = modValue });
         }
+    }
+
+    // Registers a complex modification
+    private void registerComplexModification(Modifications modType, string value, string content, int startingIndex)
+    {
+        // Would've already check the tag is custom to get this far, the only thing that's really required is the value, should definitely be able to handle empty content
+        if(string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value))
+        {
+            Debug.LogWarningFormat("Trying to parse custom tag {0}, but it has an empty value", modType);
+            return;
+        }
+
+        var modValue = parseModValue(modType, value);
+        if (modValue != null)
+            _modifications.Add(new ComplexModification { Index = startingIndex, ModType = modType, ModificationValue = modValue, ModificationContent = content});
     }
 
     // Get the variable from the repo
@@ -244,8 +264,20 @@ public class TextModifications
             mod == Modifications.RETRIEVE_VARIABLE_STRING);
     }
 
-    // Returns whether the mod is a variable registration tag
-    private bool isRegistrationMod(Modifications mod)
+    // Returns whether this custom tag has a <command=value>content</command> pattern
+    private bool isComplexTag(Modifications mod)
+    {
+        return (mod == Modifications.SEND_MESSAGE ||
+            mod == Modifications.REGISTER_SHORT ||
+            mod == Modifications.REGISTER_INT ||
+            mod == Modifications.REGISTER_LONG ||
+            mod == Modifications.REGISTER_FLOAT ||
+            mod == Modifications.REGISTER_BOOL ||
+            mod == Modifications.REGISTER_STRING);
+    }
+
+    // Returns whether modification is a variable registration command
+    private bool isRegistrationTag(Modifications mod)
     {
         return (mod == Modifications.REGISTER_SHORT ||
             mod == Modifications.REGISTER_INT ||
@@ -308,14 +340,15 @@ public class TextModifications
     #endregion
 
     // Returns the modification if there is one present
-    public List<Modification> GetAnyTextModsForPosition(int pos)
+    public List<SimpleModification> GetAnyTextModsForPosition(int pos)
     {
         return _modifications.FindAll(m => m.Index == pos);
     }
 }
 
-// Class to store the modification information, passed to the UI controller for using
-public class Modification
+// Class to store the simple modification information e.g. <command=value>
+// A modification is considered simple if it's a simple name=value pattern with no content or closing tag
+public class SimpleModification
 {
     public int Index { get; set; }
     public TextModifications.Modifications ModType { get; set; }
@@ -327,5 +360,20 @@ public class Modification
             return (T)ModificationValue;
 
         throw new Exception($"Trying to cast variable of type {ModificationValue.GetType()} to type {typeof(T)}"); // Don't want to return default(T), gonna have to throw
+    }
+}
+
+// Adds an extra property for the tags content e.g. <command=value>Content</command>
+public class ComplexModification : SimpleModification
+{
+    // Always a string?
+    public object ModificationContent { get; set; }
+
+    public T GetContent<T>()
+    {
+        if (ModificationContent is T)
+            return (T)ModificationContent;
+
+        throw new Exception($"Trying to cast variable of type {ModificationContent.GetType()} to type {typeof(T)}"); // Don't want to return default(T), gonna have to throw
     }
 }

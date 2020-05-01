@@ -6,7 +6,6 @@ using UnityEngine;
 public abstract class BaseDialogueUIController : MonoBehaviour
 {
     public DialogueController DialogueController { protected get; set; }
-    public GameObject DialogueMessageTarget;
 
     public virtual IEnumerator ShowSentence(string speaker, TextModifications textMods, bool autoProceed = false)
     { return null; }
