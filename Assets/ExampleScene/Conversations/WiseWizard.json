@@ -1,0 +1,224 @@
+{
+	"conversation":
+    [
+
+    	// Normal conversation
+		{
+			"id": 1,
+			"nextId": 2,
+			"speaker": "Wise Wizard",
+			"sentences":
+            [
+				"Hello, adventurer. It is me, the wise wizard, and I'm afraid I'm going to have to ask you for aid..."
+			]
+		},
+
+		{
+			"id": 2,
+			"speaker": "Adventurer",
+			"canBeUsedAsStartingPoint": false,
+			"nextId": 3,
+			"sentences":
+			[
+				"But, if you're so wise how come you need.."
+			]
+		},
+
+		{
+			"id": 3,
+			"speaker": "Wise Wizard",
+			"canBeUsedAsStartingPoint": false,
+			"sentences":
+			[
+				"I said it is me, <b><speed=2>the wise wizard!</b><speed=0.5> You can tell because of my fancy hat<speed=1>...",
+				"Anyway, where was I? Oh. right. Ahem.",
+				"I'm in need of a brave adventurer to complete a hazardous quest...",
+				"Enough of that. Look, I need a new hat, something a little more<speed=2>...fierce.",
+				"Problem is, it costs 20 gold.",
+				"Outrageous price, I know!?",
+				"Help me get my new hat and I will give you a treasure of the highest quality.",
+				"The highest, I say!<registerint=playerGold>0</registerint><registerbool=onQuest>true</registerbool>",
+				"Will you accept this quest?"
+			],
+			"options":
+			[
+				{
+					"nextId": 4,
+					"text": "Yes"
+				},
+				{
+					"nextId": 5,
+					"text": "Erm...No"
+				}
+			]
+		},
+		
+		// Accepted quest
+		{
+			"id": 4,
+			"canBeUsedAsStartingPoint": false,
+			"sentences":
+			[
+				"Fantastic. I knew I could trust you.",
+				"Let me just add a counter to your UI..<sendmessage=GameCanvas/Coins>ShowCoins</sendmessage>.",
+				"There you go"
+			]
+		},
+
+		//Denied quest
+		{
+			"id": 5,
+			"canBeUsedAsStartingPoint": false,
+			"sentences":
+			[
+				"Fanta...No?",
+				"Wasn't expecting that.",
+				"Let's try again...Will you accept this quest of the <speed=1.5><b>upmost importance?</b>"
+			],
+			"options":
+			[
+				{
+					"nextId": 4,
+					"text": "Of course!"
+				}
+			]
+		},
+
+
+		// On the quest but we haven't got any money. The equivalent of (onQuest && playerGold == 0)
+		{
+			"id": 6,
+			"nextId": 7,
+			"speaker": "Wise Wizard",
+			"sentences":
+			[
+				"Mate, are you even trying? You haven't got any gold yet!"
+			],
+			"startConditions":
+			[
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "onQuest"
+						},
+						{
+							"value": true,
+							"type": "bool"
+						}
+					]
+				},
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "playerGold"
+						},
+						{
+							"value": 0,
+							"type": "int"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": 7,
+			"nextId": 8,
+			"speaker": "Adventurer",
+			"canBeUsedAsStartingPoint": false,
+			"sentences":
+			[
+				"I didn't agree to..."
+			]
+		},
+		{
+			"id": 8,
+			"speaker": "Wise Wizard",
+			"canBeUsedAsStartingPoint": false,
+			"sentences":
+			[
+				"Chop chop. And remember...fierce"
+			]
+		},
+
+		// Got the quest but we've got got less than 10. The equivalent of (playerGold > 0 && playerGold < 10)
+		{
+			"id": 9,
+			"speaker": "Wise Wizard",
+			"sentences":
+			[
+				"I mean, it's better than nothing, but you've only got <retrieveint=playerGold>.",
+				"I'm never going to get my new hat am I?"
+			],
+			"startConditions":
+			[
+				{
+					"comparison": ">",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "playerGold"
+						},
+						{
+							"value": 0,
+							"type": "int"
+						}
+					]
+				},
+				{
+					"comparison": "<",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "playerGold"
+						},
+						{
+							"value": 10,
+							"type": "int"
+						}
+					]
+				}
+			]
+		},
+
+		// Got the required gold for the quest to be completed. The equivalent of (playerGold == 20)
+		{
+			"id": 10,
+			"speaker": "Wise Wizard",
+			"sentences":
+			[
+				"I knew I could trust you, you have that look about you.",
+				"Let me just take the gold, please<sendmessage=GameCanvas/Coins>ResetCoins</sendmessage>.",
+				"And now for yo..Let me just open the chest<sendmessage=Items/TreasureChest>Open</sendmessage>.",
+				"And now for your reward. Oh, it's empty!",
+				"Right, I forgot, I gave that reward to the guy who got me this top hat..",
+				"Erm<speed=1.5>...",
+				"The real rewards are the friends we've made along the way<speed=3>...?"
+			],
+			"startConditions":
+			[
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "playerGold"
+						},
+						{
+							"value": 20,
+							"type": "int"
+						}
+					]
+				}
+			]
+		}
+	]
+}

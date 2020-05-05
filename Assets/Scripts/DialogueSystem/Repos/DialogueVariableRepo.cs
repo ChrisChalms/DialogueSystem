@@ -43,7 +43,7 @@ public class DialogueVariableRepo
             return;
         }
 
-        // I don't like this, there's got to be a better way of doing this
+        // I don't like this, there's got to be a better way of doing it
         try
         {
             object castVariable = null;
@@ -77,10 +77,23 @@ public class DialogueVariableRepo
     // Return the variable if it exists
     public T RetrieveVariable<T>(string name)
     {
+        // I don't like returning a default like this, but it's better than an exception
         if (!_variables.ContainsKey(name))
-            throw new Exception($"Trying to retrieve the variable {name} but it hasn't been registered"); // Don't want to return default(T), gonna have to throw
+            return default(T);
         else
             return _variables[name].GetValue<T>();
+    }
+
+    // Get the variable if it exists and we don't care about the type
+    public object RetrieveVariable(string name)
+    {
+        if (!_variables.ContainsKey(name))
+        {
+            Debug.LogWarningFormat("Trying to retrieve the variable {0} but it hasn't been registered", name);
+            return null;
+        }
+        else
+            return _variables[name].Value;
     }
 
     #endregion
@@ -91,11 +104,14 @@ internal class DialogueVariable
 {
     public object Value { get; set; }
 
+    // Get the value as a type
     public T GetValue<T>()
     {
         if(Value is T)
             return (T)Value;
 
-        throw new Exception($"Trying to cast variable of type {Value.GetType()} to type {typeof(T)}"); // Don't want to return default(T), gonna have to throw
+        // I don't like returning a default like this, but it's better than an exception
+        return default(T);
     }
+
 }

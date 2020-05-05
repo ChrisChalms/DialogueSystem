@@ -6,7 +6,7 @@ using UnityEngine;
 public class ExampleDialogueUIController : BaseDialogueUIController
 {
     [SerializeField]
-    private float _defaultTimeBetweenChars = 0.08f;
+    private float _defaultTimeBetweenChars = 0.035f;
     [SerializeField]
     private float _fastTimebetweenChars = 0.01f;
 

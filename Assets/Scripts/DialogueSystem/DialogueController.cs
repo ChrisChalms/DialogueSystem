@@ -51,8 +51,16 @@ public class DialogueController : MonoBehaviour
         _currentSentence = 0;
         foreach(var diag in tempoConvo.Dialogues)
         {
-            if (_currentDialogue == null || diag.Id < _currentDialogue.Id)
-                _currentDialogue = diag;
+            if ((_currentDialogue == null || diag.Id > _currentDialogue.Id) && diag.CanBeUsedAsStartingPoint)
+            {
+                if(diag.StartConditions.Count > 0)
+                { 
+                    if (diag.EvaluateStartingConditions())
+                        _currentDialogue = diag;
+                }
+                else
+                    _currentDialogue = diag;
+            }
         }
 
         if (_currentDialogue == null)

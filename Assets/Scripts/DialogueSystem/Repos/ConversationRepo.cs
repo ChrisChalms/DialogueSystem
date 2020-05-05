@@ -31,6 +31,14 @@ public class ConversationRepo : MonoBehaviour
         loadConversations();
     }
 
+    public void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+            DialogueVariableRepo.Instance.Register("jumps", 10);
+        else if(Input.GetKeyDown(KeyCode.Alpha2))
+            DialogueVariableRepo.Instance.Register("hasHat", true);
+    }
+
     #endregion
 
     // Parse the text assets that have been assigned in the editor
@@ -46,7 +54,10 @@ public class ConversationRepo : MonoBehaviour
             }
 
             if (valdateConversation(tempObject, file.name))
+            {
                 _conversations[file.name] = tempObject; // Overwrite without throwing
+                tempObject.FinishedParsing();
+            }
         }
     }
 
@@ -66,6 +77,7 @@ public class ConversationRepo : MonoBehaviour
                 Debug.LogWarningFormat("Conversation {0} already registered, overwritting", name);
 
             _conversations[name] = tempObject;
+            tempObject.FinishedParsing();
         }
     }
 
@@ -104,8 +116,9 @@ public class ConversationRepo : MonoBehaviour
             dialogueIds.Add(diag.Id);
         }
 
-        // Loop through dialogues and check Ids and Options
-        foreach(var diag in tempConversation.Dialogues)
+        // Loop through dialogues and check Ids, Conditions, and Options
+        var startingPriorities = new List<int>();
+        foreach (var diag in tempConversation.Dialogues)
         {
             // Check for dialogue next Ids values
             if(diag.NextId != -1)
@@ -141,6 +154,92 @@ public class ConversationRepo : MonoBehaviour
                 {
                     Debug.LogWarningFormat("Dialogue option has a nextId {0} that doesn't exist, or it goes nowhere in file {1}", option.NextId, fileName);
                     return false;
+                }
+            }
+
+            // Check Conditions and Variables
+            foreach (var con in diag.StartConditions)
+            {
+                // Can only test 2 varaibles against each other. When a conversation is picked all conditions must evaluate to true, so if more tests are needed just stack conditions
+                if (con.Variables.Count != 2)
+                {
+                    Debug.LogWarningFormat("A condition in file {0} does not contains {1} variables, must have 2", fileName, con.Variables.Count);
+                    return false;
+                }
+
+                // Check the type, value, and name individually
+                foreach(var variable in con.Variables)
+                {
+                    // Check there's a value if we're not retrieving from the repo
+                    if (string.IsNullOrEmpty(variable.Value))
+                    {
+                        if (!variable.FromRepo)
+                        {
+                            Debug.LogWarningFormat("A condition variable in file {0} has a conditional varialbe without a value. One is required if not retrieving from the variable repo", fileName);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if(variable.FromRepo)
+                            Debug.LogWarningFormat("A condition variable in file {0} has a value it will be ignored as the variable is marked to be retrieved from the variable repo", fileName);
+                    }
+
+                    // A type is required if we're not retrieving from the repo
+                    if (string.IsNullOrEmpty(variable.Type))
+                    {
+                        if (!variable.FromRepo)
+                        {
+                            Debug.LogWarningFormat("A condition in file {0} has a conditional variable without a type. One is required if not retrieving from the variable repo", fileName);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if(variable.FromRepo)
+                            Debug.LogWarningFormat("A condition variable in file {0} has a type but will be ignored as the variable is marked to be retrieved from the variable repo", fileName);
+                    }
+
+                    // Check there's a name if we're retrieving from the repo
+                    if(string.IsNullOrEmpty(variable.Name))
+                    {
+                        if(variable.FromRepo)
+                        {
+                            Debug.LogWarningFormat("A condition variable in the file {0} does not have a name value, one is required for retrieval from the varialbe repo", fileName);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (!variable.FromRepo)
+                            Debug.LogWarningFormat("A condition variable in the file {0} has name value but will be ignored as the variable is not marked to be retrieved from the variable repo", fileName);
+                    }
+                }
+
+
+                var var1LowerType = con.Variables[0].Type?.ToLower();
+                var var2LowerType = con.Variables[1].Type?.ToLower();
+
+                // Check the comparison operator if either of the types is a string or bool
+                if (var1LowerType == "string" || var1LowerType == "bool" || var2LowerType == "string" || var2LowerType == "bool")
+                {
+                    if (con.Comparison != "==" && con.Comparison != "!=")
+                    {
+                        Debug.LogWarningFormat("String and booleans can only use the == and != equality operators. Condition in file {0} is trying to use {1}", fileName, con.Comparison);
+                        return false;
+                    }
+                }
+
+                // String and bool are only tested against each other. This isn't quite true, normally, but it's a lot more readable to only allow string and bools to be compared against each other
+                if (!con.Variables[0].FromRepo && (var1LowerType == "bool" || var1LowerType == "string") &&
+                    !con.Variables[1].FromRepo && (var2LowerType == "bool" || var2LowerType == "string"))
+                {
+                    // Check they're compatible
+                    if(var1LowerType != var2LowerType)
+                    {
+                        Debug.LogWarningFormat("Conversation file {0} has a condition with an unsupported variable comparison. Strings or booleans can only be tested against each other", fileName);
+                        return false;
+                    }
                 }
             }
         }

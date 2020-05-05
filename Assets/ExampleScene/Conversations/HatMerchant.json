@@ -1,0 +1,232 @@
+{
+	"conversation":
+    [
+
+    	// Normal conversation
+		{
+			"id": 1,
+			"nextId": 2,
+			"speaker": "Hat Merchant",
+			"sentences":
+            [
+				"Uwww, a customer!",
+				"Oh, you're working for that crazy old man arn't you?",
+				"He's been trying to get my hat off me for days! I said he can have it for free, but he insists on paying 20 gold.",
+				"Between you and me, I think he's a little strange..."
+			]
+		},
+
+		{
+			"id": 2,
+			"speaker": "Adventurer",
+			"nextId": 3,
+			"canBeUsedAsStartingPoint": false,
+			"sentences":
+			[
+				"Do you happen to have a odd jobs that nee...."
+			]
+		},
+		{
+			"id": 3,
+			"speaker": "Hat Merchant",
+			"canBeUsedAsStartingPoint": false,
+			"sentences":
+			[
+				"Well, well. Come to think of it, I would pay 10 gold to anyone who could jump 3 times in front of me<registerbool=trackingJumps>true</registerbool><registerint=playerJumps>0</registerint><registerbool=recievedJumpReward>false</registerbool>."
+			]
+		},
+
+		// We've got the jump quest but we haven't jumped yet. The equivalent of (trackingJumps && playerJumps == 0)
+		{
+			"id": 4,
+			"nextId": 5,
+			"speaker": "Hat Merchant",
+			"sentences":
+			[
+				"You haven't jumped yet!",
+				"Just bend you legs and..<speed=3>spring!"
+			],
+			"startConditions":
+			[
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "trackingJumps"
+						},
+						{
+							"value": true,
+							"type": "bool"
+						}
+					]
+				},
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "playerJumps"
+						},
+						{
+							"value": 0,
+							"type": "int"
+						}
+					]
+				},
+				
+			],
+		},
+		
+		{
+			"id": 5,
+			"speaker": "Adventurer",
+			"canBeUsedAsStartingPoint": false,
+			"sentences":
+			[
+				"<size=30>This is so weird</size>"
+			]
+		},
+
+		// We've got the jump quest but we've jumped less than the required 3. The equivalent of (trackingJumps && playerJumps > 0 && playerJumps < 3)
+		{
+			"id": 6,
+			"speaker": "Hat Merchant",
+			"sentences":
+			[
+				"Good start! Only a few more"
+			],
+			"startConditions":
+			[
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "trackingJumps"
+						},
+						{
+							"value": true,
+							"type": "bool"
+						}
+					]
+				},
+				{
+					"comparison": ">",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "playerJumps"
+						},
+						{
+							"value": 0,
+							"type": "int"
+						}
+					]
+				},
+				{
+					"comparison": "<",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "playerJumps"
+						},
+						{
+							"value": 3,
+							"type": "int"
+						}
+					]
+				}
+			]
+		},
+
+		// We've completed the jump quest but haven't received our reward. The equivalent of (trackingJumps && _playerJumps >= 3 && !recievedJumpReward)
+		{
+			"id": 7,
+			"speaker": "Hat Merchant",
+			"sentences":
+			[
+				"Ahh, that's the stuff. Nothing quite like it. Here's your well earned reward, with an added bonus<registerbool=trackingJumps>false</registerbool><<registerbool=recievedJumpReward>true</registerbool><sendmessage=GameCanvas/Coins>Add17Coins</sendmessage>."
+			],
+			"startConditions":
+			[
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "trackingJumps"
+						},
+						{
+							"value": true,
+							"type": "bool"
+						}
+					]
+				},
+				{
+					"comparison": ">=",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "playerJumps"
+						},
+						{
+							"value": 3,
+							"type": "int"
+						}
+					]
+				},
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "recievedJumpReward"
+						},
+						{
+							"value": false,
+							"type": "bool"
+						}
+					]
+				},
+			]
+		},
+
+		// We've completed the jump quest and recieved our reward. The equivalent of (_recievedJumpReward)
+		{
+			"id": 8,
+			"speaker": "Hat Merchant",
+			"sentences":
+			[
+				"...just flew through the air..",
+				"<speed=2>up...<speed=1>and then down...",
+				"Beautiful"
+			],
+			"startConditions":
+			[
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "recievedJumpReward"
+						},
+						{
+							"value": true,
+							"type": "bool"
+						}
+					]
+				}
+			]
+		}
+	]
+}
