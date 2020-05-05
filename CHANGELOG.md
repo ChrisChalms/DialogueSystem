@@ -2,6 +2,34 @@
 
 All notable changes will be documented here.
 
+## [v0.45](https://github.com/ChrisChalms/DialogueSystem/commit/8607cfed96beebbe56d30885864457010a25a54c) - 05/05/2020
+
+### Added
+- Functionality to store, retrieve, and evaluate variables from the dialogue, and use those evaluations to choose where to start a conversation
+- A new example scene to show off the newer features of the dialogue system
+  - New player controller, collision detection, and animation controller
+  - Added treasure and coin items
+  - Two new NPCs with conversation files
+
+### Changed
+- Heavily modified the conversation model file to support the new variable and condition functionality
+- Added validation for the new conversation model
+- Variable repo returns default(T) instead of throwing exceptions
+- Dialogue controller now looks for the highest dialogue if for a starting point
+- Reorganised the example scene assets to to be grouped together under one folder
+
+### Removed
+- Old example scene
+- Old characters and their conversation files
+- Player controller
+- Camera follow script
+- Example message recieving scripts
+
+## [v.35](https://github.com/ChrisChalms/DialogueSystem/commit/c1bf93412d2825a87266a2af349a37fac0e1f23a) - 02/05/2020
+
+### Changed
+- Variable repo not allows overwritting of existing variables.
+
 ## [v0.3](https://github.com/ChrisChalms/DialogueSystem/commit/26b7bbb7f7b2e8d54288ec38f70f8e87bfb77e1a) - 01/05/2020
 
 ### Added
