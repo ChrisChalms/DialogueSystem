@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#pragma warning disable 649
+
+using System.Collections.Generic;
 using UnityEngine;
 
 // Parses and stores all the conversations for this scene. 
@@ -29,14 +31,6 @@ public class ConversationRepo : MonoBehaviour
         _deserializer = new JSONDeserializer();
 
         loadConversations();
-    }
-
-    public void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-            DialogueVariableRepo.Instance.Register("jumps", 10);
-        else if(Input.GetKeyDown(KeyCode.Alpha2))
-            DialogueVariableRepo.Instance.Register("hasHat", true);
     }
 
     #endregion

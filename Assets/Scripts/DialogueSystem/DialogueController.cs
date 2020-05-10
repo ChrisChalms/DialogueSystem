@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#pragma warning disable 649
+
+using UnityEngine;
 
 // The starting point for starting conversations and proceeding in the current conversation
 public class DialogueController : MonoBehaviour

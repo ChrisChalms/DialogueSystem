@@ -37,7 +37,7 @@ public class CoinCounter : MonoBehaviour
     // Retrieve, increment, then put back
     private void addCoins(int amount)
     {
-        var coinAmount = DialogueVariableRepo.Instance.RetrieveVariable<int>("playerGold");
+        var coinAmount = DialogueVariableRepo.Instance.Retrieve<int>("playerGold");
         coinAmount += amount;
         _amountText.text = $"x {coinAmount}";
         DialogueVariableRepo.Instance.Register("playerGold", coinAmount);

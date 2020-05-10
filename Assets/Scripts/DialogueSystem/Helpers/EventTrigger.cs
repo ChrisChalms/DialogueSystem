@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#pragma warning disable 649
+
+using UnityEngine;
 using UnityEngine.Events;
 
 public class EventTrigger : MonoBehaviour

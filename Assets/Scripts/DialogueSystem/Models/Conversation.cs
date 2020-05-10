@@ -123,7 +123,7 @@ public class Variable
     public T GetValue<T>()
     {
         if (FromRepo)
-            return DialogueVariableRepo.Instance.RetrieveVariable<T>(Name);
+            return DialogueVariableRepo.Instance.Retrieve<T>(Name);
 
         if (_castValue == null)
             Debug.LogWarningFormat("Trying to retrieve a variable value for comparison that is null");
@@ -135,7 +135,7 @@ public class Variable
     public object GetValue()
     {
         if (FromRepo)
-            return DialogueVariableRepo.Instance.RetrieveVariable(Name);
+            return DialogueVariableRepo.Instance.Retrieve(Name);
 
         if (_castValue == null)
             Debug.LogWarningFormat("Trying to retrieve a variable value for comparison that is null");

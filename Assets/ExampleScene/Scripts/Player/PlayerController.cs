@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#pragma warning disable 649
+
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -96,9 +98,9 @@ public class PlayerController : MonoBehaviour
         if (_collision.IsGrounded)
         {
             _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
-            if(DialogueVariableRepo.Instance.RetrieveVariable<bool>("trackingJumps"))
+            if(DialogueVariableRepo.Instance.Retrieve<bool>("trackingJumps"))
             {
-                var tempJumps = DialogueVariableRepo.Instance.RetrieveVariable<int>("playerJumps");
+                var tempJumps = DialogueVariableRepo.Instance.Retrieve<int>("playerJumps");
                 tempJumps++;
                 DialogueVariableRepo.Instance.Register<int>("playerJumps", tempJumps);
             }

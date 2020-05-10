@@ -17,7 +17,7 @@ public class Coin : MonoBehaviour
     public void Collected()
     {
         // Don't collect if we're not on the quest for the wizzard
-        if (!DialogueVariableRepo.Instance.RetrieveVariable<bool>("onQuest"))
+        if (!DialogueVariableRepo.Instance.Retrieve<bool>("onQuest"))
             return;
 
         _counter.AddCoin();

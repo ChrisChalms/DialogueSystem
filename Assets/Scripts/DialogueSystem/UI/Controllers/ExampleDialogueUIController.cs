@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#pragma warning disable 649
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,6 +36,11 @@ public class ExampleDialogueUIController : BaseDialogueUIController
         _firstSentenceDelay = new WaitForSeconds(0.3f);
 
         _currentTimeBetweenChars = _defaultTimeBetweenChars;
+
+        // Events example
+        DialogueVariableRepo.Instance.VariableRegistered += variableRegistered;
+        DialogueVariableRepo.Instance.VariableUpdated += variableUpdated;
+        DialogueVariableRepo.Instance.VariableRemoved += variableRemoved;
     }
 
     // Handle the UI Input
@@ -147,4 +154,12 @@ public class ExampleDialogueUIController : BaseDialogueUIController
         _nameBox.SetName(string.Empty);
         _optionButtons.HideOptions();
     }
+
+    #region Events
+
+    private void variableRegistered(object _, VariableEventArgs args) => Debug.LogFormat("The variable {0} was added", args.VariableKey);
+    private void variableUpdated(object _, VariableEventArgs args) => Debug.LogFormat("The variable {0} was updated", args.VariableKey);
+    private void variableRemoved(object _, VariableEventArgs args) => Debug.LogFormat("The variable {0} was removed", args.VariableKey);
+
+    #endregion
 }

@@ -186,22 +186,22 @@ public class TextModifications
         var variableName = variableSplits[1];
         // Retrieve short var
         if (modType == Modifications.RETRIEVE_VARIABLE_SHORT)
-            return DialogueVariableRepo.Instance.RetrieveVariable<short>(variableName);
+            return DialogueVariableRepo.Instance.Retrieve<short>(variableName);
         // Retrieve int var
         else if (modType == Modifications.RETRIEVE_VARIABLE_INT)
-            return DialogueVariableRepo.Instance.RetrieveVariable<int>(variableName);
+            return DialogueVariableRepo.Instance.Retrieve<int>(variableName);
         // Retrieve long var
         else if (modType == Modifications.RETRIEVE_VARIABLE_LONG)
-            return DialogueVariableRepo.Instance.RetrieveVariable<long>(variableName);
+            return DialogueVariableRepo.Instance.Retrieve<long>(variableName);
         // Retrieve float var
         else if (modType == Modifications.RETRIEVE_VARIABLE_FLOAT)
-            return DialogueVariableRepo.Instance.RetrieveVariable<float>(variableName);
+            return DialogueVariableRepo.Instance.Retrieve<float>(variableName);
         // Retrieve bool var
         else if (modType == Modifications.RETRIEVE_VARIABLE_BOOL)
-            return DialogueVariableRepo.Instance.RetrieveVariable<bool>(variableName);
+            return DialogueVariableRepo.Instance.Retrieve<bool>(variableName);
         // Retrieve string var
         else if (modType == Modifications.RETRIEVE_VARIABLE_STRING)
-            return DialogueVariableRepo.Instance.RetrieveVariable<string>(variableName);
+            return DialogueVariableRepo.Instance.Retrieve<string>(variableName);
 
         return string.Empty;
     }
