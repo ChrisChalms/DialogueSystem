@@ -2,7 +2,7 @@
 
 All notable changes will be documented here.
 
-##[v0.5](https://github.com/ChrisChalms/DialogueSystem/commit/bd4b0518c8886cb546ac923c146cdb00e08d9df6)
+## [v0.5](https://github.com/ChrisChalms/DialogueSystem/commit/bd4b0518c8886cb546ac923c146cdb00e08d9df6)
 
 ### Added
  - Functionality to remove a registered variable from the variable repo
