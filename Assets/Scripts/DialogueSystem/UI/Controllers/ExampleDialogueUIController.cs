@@ -74,9 +74,6 @@ public class ExampleDialogueUIController : BaseDialogueUIController
             _currentTimeBetweenChars = _defaultTimeBetweenChars;
             _handledInput = false;
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            DialogueController.Instance.StartConversation("test");
     }
 
     #endregion
