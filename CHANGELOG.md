@@ -2,6 +2,18 @@
 
 All notable changes will be documented here.
 
+## [v0.5](https://github.com/ChrisChalms/DialogueSystem/commit/bd4b0518c8886cb546ac923c146cdb00e08d9df6)
+
+### Added
+ - Functionality to remove a registered variable from the variable repo
+ - Variable repo events for when a variable is registered, updated, and removed
+ 
+### Changed
+- Surpressed the 649 about a variable never getting intialzed when using SerializeField to set in the editor
+
+### Removed
+- Testing code in the conversation repo Update function
+
 ## [v0.45](https://github.com/ChrisChalms/DialogueSystem/commit/8607cfed96beebbe56d30885864457010a25a54c) - 05/05/2020
 
 ### Added

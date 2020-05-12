@@ -124,7 +124,7 @@ As well as the standard rich text tags, there are two different types of custom 
     - registerbool/retrievebool
     - registerstring/retrievestring
  
- They're all pretty straight forward to use:
+They're all pretty straight forward to use:
  ```javascript
  // Speed
  "A normal speed sentence, <speed=3>a lot slower. <speed=1>And back to normal speed again"
@@ -145,18 +145,20 @@ As well as the standard rich text tags, there are two different types of custom 
  "Hello <retrievestring=charactersName>, long time no see."
  ```
  
- You can also manually register/retrieve variables via the DialogueVarialbeRepo class, see the example scene for an implementation
+You can also manually register/retrieve variables via the DialogueVarialbeRepo class, see the example scene for an implementation. Currently you can only remove a variable from the repo by calling the ` DialogueVariableRepo.Instance.Remove(key);`
  
  ## TODO
  - ~~Proof of concept v 0.1~~
  - ~~Add conversations to ConversationRepo and parse/validate in real time, not just on scene start~~
  - ~~Add some sort of generic event trigger so the conversations can be added, loaded, and triggered without code~~
- - Custom tag to allow for waiting/pausing during dialogue
+ - Custom tag to allow for waiting during dialogue
+ - Make simple tag to remove variable from the dialogue
  - ~~Conditional starting positions e.g. start at a different dialoue if a registered variable is a certain value~~
  - Some sort of OnStart, OnFinish optional action
  - ~~Would be nice to specify the target of the sendmessage tag in the dialogue JSON~~
- - Could always support more varaible types for registration/retrieval
- - ~~Add more tag types~~ - Split tag registration into simple and complex types
+ - ~~Added helpful events to the variable repo for adding, updated, and removing~~
+ - ~~Add more tag types~~
+ - ~~Split tag registration into simple and complex types~~
  - Would like to add XML support
  - Maybe some docs or a short walkthrough
  
