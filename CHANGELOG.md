@@ -2,7 +2,19 @@
 
 All notable changes will be documented here.
 
-## [v0.5](https://github.com/ChrisChalms/DialogueSystem/commit/bd4b0518c8886cb546ac923c146cdb00e08d9df6)
+## [v0.55](https://github.com/ChrisChalms/DialogueSystem/commit/8e471d07396fa49c4b74faabb75c4cea4a40952e) - 12/05/2020
+
+### Added
+- Simple wait tag
+- Simple removeVariable tag
+- Acions to the DialogueController for conversation starting and ending
+- Static logger added
+- New functionality testing conversation to the example game
+
+### Changed
+- Changed the variable repo's events to actions
+
+## [v0.5](https://github.com/ChrisChalms/DialogueSystem/commit/bd4b0518c8886cb546ac923c146cdb00e08d9df6) - 10/05/2020
 
 ### Added
  - Functionality to remove a registered variable from the variable repo
