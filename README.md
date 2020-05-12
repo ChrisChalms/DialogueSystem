@@ -159,10 +159,11 @@ You can also manually register/retrieve/remove variables via the DialogueVarialb
  - ~~Proof of concept v 0.1~~
  - ~~Add conversations to ConversationRepo and parse/validate in real time, not just on scene start~~
  - ~~Add some sort of generic event trigger so the conversations can be added, loaded, and triggered without code~~
- - Custom tag to allow for waiting during dialogue
- - Make simple tag to remove variable from the dialogue
+ - ~~Custom tag to allow for waiting during dialogue~~
+ - ~~Make simple tag to remove variable from the dialogue~~
  - ~~Conditional starting positions e.g. start at a different dialoue if a registered variable is a certain value~~
  - Some sort of OnStart, OnFinish optional action
+ - ~~Make a static logger~~
  - ~~Would be nice to specify the target of the sendmessage tag in the dialogue JSON~~
  - ~~Added helpful events to the variable repo for adding, updated, and removing~~
  - ~~Add more tag types~~
