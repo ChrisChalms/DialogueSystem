@@ -1,10 +1,17 @@
 ﻿#pragma warning disable 649
 
+using System;
 using UnityEngine;
 
 // The starting point for starting conversations and proceeding in the current conversation
 public class DialogueController : MonoBehaviour
 {
+    // Actions
+    public event Action ConversationStarted;
+    public event Action ConversationEnded;
+
+    [SerializeField]
+    private DialogueLogger.LogLevel _logLevel;
     [SerializeField]
     private BaseDialogueUIController _uiController;
 
@@ -14,12 +21,17 @@ public class DialogueController : MonoBehaviour
     private bool _inConversation;
     private int _currentSentence;
 
+    public static DialogueController Instance { get; private set; }
+
     #region MonoBehaviour
 
-    // Initialize
-    private void Start()
+    // Apply singleton
+    private void Awake()
     {
-        _uiController.DialogueController = this;
+        if (Instance == null)
+            Instance = this;
+
+        DialogueLogger.CurrentLogLevel = (int)_logLevel;
     }
 
     #endregion
@@ -29,13 +41,13 @@ public class DialogueController : MonoBehaviour
     {
         if (_inConversation)
         {
-            Debug.LogWarningFormat("Trying to start conversation {0} while already in a conversation", convoName);
+            DialogueLogger.LogWarning($"Trying to start conversation {convoName} while already in a conversation");
             return;
         }
 
         if(_uiController == null)
         {
-            Debug.LogWarning("Trying to start a conversation, but there's not DialogueUIController assigned");
+            DialogueLogger.LogError("Trying to start a conversation, but there's not DialogueUIController assigned");
             return;
         }
 
@@ -43,7 +55,7 @@ public class DialogueController : MonoBehaviour
         var tempoConvo = ConversationRepo.Instance?.ResolveConversation(convoName);
         if (tempoConvo == null)
         {
-            Debug.LogWarningFormat("Tried to start conversation {0} but it doesn't exist is the ConversationRepo", convoName);
+            DialogueLogger.LogError($"Tried to start conversation {convoName} but it doesn't exist is the ConversationRepo");
             return;
         }
 
@@ -67,7 +79,7 @@ public class DialogueController : MonoBehaviour
 
         if (_currentDialogue == null)
         {
-            Debug.LogWarningFormat("Couldn't find starting point for conversation {0}", convoName);
+            DialogueLogger.LogError($"Couldn't find starting point for conversation {convoName}");
             return;
         }
 
@@ -76,6 +88,7 @@ public class DialogueController : MonoBehaviour
         _currentConversation = tempoConvo;
 
         StartCoroutine(_uiController.ShowSentence(_currentDialogue.Speaker, parseSentenceForCustomTags(_currentDialogue.Sentences[_currentSentence]), _currentDialogue.AutoProceed));
+        ConversationStarted();
     }
 
     // Go to the next step in the conversation e.g. Show options, go to the next dialogue in conversation, or go to the next sentence
@@ -99,6 +112,7 @@ public class DialogueController : MonoBehaviour
             {
                 _uiController.Close();
                 _inConversation = false;
+                ConversationEnded();
             }
         }
         else
@@ -120,12 +134,11 @@ public class DialogueController : MonoBehaviour
     // Navigates to a dialogue inside the current conversation
     private void goToDialogue(int index)
     {
-        // TODO: Work out actions here. e.g. set/retrieve globalvars or something
         var nextDialogue = _currentConversation.Dialogues.Find(d => d.Id == index);
 
         if(nextDialogue == null)
         {
-            Debug.LogWarningFormat("Trying to navigate to a dialogue with the Id {0}, but there's isn't one present in the current conversation", index);
+            DialogueLogger.LogError($"Trying to navigate to a dialogue with the Id {index}, but there's isn't one present in the current conversation");
             return;
         }
 
@@ -141,5 +154,4 @@ public class DialogueController : MonoBehaviour
     }
 
     #endregion
-
 }

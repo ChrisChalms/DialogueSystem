@@ -6,9 +6,9 @@ using UnityEngine;
 public class DialogueVariableRepo
 {
     // Events
-    public event EventHandler<VariableEventArgs> VariableRegistered;
-    public event EventHandler<VariableEventArgs> VariableUpdated;
-    public event EventHandler<VariableEventArgs> VariableRemoved;
+    public event Action<string> VariableRegistered;
+    public event Action<string> VariableUpdated;
+    public event Action<string> VariableRemoved;
 
     private Dictionary<string, DialogueVariable> _variables;
 
@@ -32,13 +32,13 @@ public class DialogueVariableRepo
         if (_variables.ContainsKey(name))
         {
             _variables[name].Value = variableValue;
-            InvokeEvent(VariableUpdated, name);
+            VariableUpdated(name);
         }
         // Add
         else
         {
             _variables.Add(name, new DialogueVariable { Value = variableValue });
-            InvokeEvent(VariableRegistered, name);
+            VariableRegistered(name);
         }
     }
 
@@ -79,7 +79,7 @@ public class DialogueVariableRepo
         }
         catch(Exception e)
         {
-            Debug.LogWarningFormat("Error registering variable {0} to the type {1}. Error message: {2}", variable, variableType.ToString(), e.Message);
+            DialogueLogger.LogError($"Error registering variable {variable} to the type {variableType}. Error message: {e.Message}");
         }
     }
 
@@ -88,7 +88,10 @@ public class DialogueVariableRepo
     {
         // I don't like returning a default like this, but it's better than an exception
         if (!_variables.ContainsKey(name))
+        {
+            DialogueLogger.LogWarning($"Trying to retrieve the variable {name} but it hasn't been registered. Returning default");
             return default(T);
+        }
         else
             return _variables[name].GetValue<T>();
     }
@@ -98,7 +101,7 @@ public class DialogueVariableRepo
     {
         if (!_variables.ContainsKey(name))
         {
-            Debug.LogWarningFormat("Trying to retrieve the variable {0} but it hasn't been registered", name);
+            DialogueLogger.LogWarning($"Trying to retrieve the variable {name} but it hasn't been registered");
             return null;
         }
         else
@@ -110,24 +113,14 @@ public class DialogueVariableRepo
     {
         if (!_variables.ContainsKey(name))
         {
-            Debug.LogWarningFormat("Trying to remove a variable {0} but it hasn't been registered", name);
+            DialogueLogger.LogError($"Trying to remove a variable {name} but it hasn't been registered");
             return;
         }
         else
         {
             _variables.Remove(name);
-            InvokeEvent(VariableRemoved, name);
+            VariableRemoved(name);
         }
-    }
-
-    #endregion
-
-    #region Helpers
-
-    // Invoke the supplied event if we can
-    public void InvokeEvent(EventHandler<VariableEventArgs> handler, string key)
-    {
-        handler?.Invoke(this, new VariableEventArgs { VariableKey = key });
     }
 
     #endregion
@@ -148,10 +141,4 @@ internal class DialogueVariable
         return default(T);
     }
 
-}
-
-// Class to hold the key of the variable changed/added
-public class VariableEventArgs : EventArgs
-{
-    public string VariableKey { get; set; }
 }

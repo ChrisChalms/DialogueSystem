@@ -28,14 +28,14 @@ public class ConversationLoader : MonoBehaviour
         // Can't load if there's no name
         if (string.IsNullOrEmpty(_name))
         {
-            Debug.LogWarningFormat("Object {0} cannot register a conversation without a name", gameObject.name);
+            DialogueLogger.LogError($"Object {gameObject.name} cannot register a conversation without a name");
             return;
         }
 
         // Can't load if there's no conversation
         if(_file == null)
         {
-            Debug.LogWarningFormat("Object {0} has an empty conversation file", gameObject.name);
+            DialogueLogger.LogError($"Object {gameObject.name} has an empty conversation file");
             return;
         }
 

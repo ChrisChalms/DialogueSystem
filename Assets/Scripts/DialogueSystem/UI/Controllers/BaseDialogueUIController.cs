@@ -5,8 +5,6 @@ using UnityEngine;
 // Have to use inheritance instead of interfaces to avoid dependencies beacuse interfaces can't be serialized and assigned in the editor
 public abstract class BaseDialogueUIController : MonoBehaviour
 {
-    public DialogueController DialogueController { protected get; set; }
-
     public virtual IEnumerator ShowSentence(string speaker, TextModifications textMods, bool autoProceed = false)
     { return null; }
 

@@ -11,6 +11,8 @@ public class TextModifications
         NOT_CUSTOM,
         SPEED,
         SEND_MESSAGE,
+        REMOVE_VARAIBLE,
+        WAIT,
 
         RETRIEVE_VARIABLE_SHORT,
         RETRIEVE_VARIABLE_INT,
@@ -24,13 +26,12 @@ public class TextModifications
         REGISTER_LONG,
         REGISTER_FLOAT,
         REGISTER_BOOL,
-        REGISTER_STRING
+        REGISTER_STRING,
     }
 
     private List<SimpleModification> _modifications;
-    private string _strippedSentence;
 
-    public string Sentence => _strippedSentence;
+    public string Sentence { get; private set; }
 
     // Initialize
     public TextModifications(string sentence)
@@ -58,7 +59,7 @@ public class TextModifications
         var commandStarted = 0;
         var commandCharsAdded = 0;
 
-        _strippedSentence = string.Empty;
+        Sentence = string.Empty;
 
         for (var i = 0; i < sentence.Length; i++)
         {
@@ -87,7 +88,7 @@ public class TextModifications
                     if (isRetreivalMod(tempType))
                     {
                         // Replace text with retreived variable
-                        _strippedSentence += getVariableFromRepo(tempType, commandText);
+                        Sentence += getVariableFromRepo(tempType, commandText);
                         commandCharsAdded -= (commandText.Length - 2);
                     }
                     // All other complex tags e.g. <command=value>content</command>
@@ -121,7 +122,7 @@ public class TextModifications
                 // Reset as if this didn't happen
                 else
                 {
-                    _strippedSentence += $"<{commandText}>";
+                    Sentence += $"<{commandText}>";
                     commandCharsAdded -= (commandText.Length - 2);
                 }
 
@@ -131,7 +132,7 @@ public class TextModifications
 
             // Add letter to the stripped sentence if we're not parsing
             if (!parsingCommand && !parsingComplexTag)
-                _strippedSentence += sentence[i];
+                Sentence += sentence[i];
             // Add to the letter to the correct string
             else
             {
@@ -167,7 +168,7 @@ public class TextModifications
         // Would've already check the tag is custom to get this far, the only thing that's really required is the value, should definitely be able to handle empty content
         if(string.IsNullOrWhiteSpace(value) || string.IsNullOrEmpty(value))
         {
-            Debug.LogWarningFormat("Trying to parse custom tag {0}, but it has an empty value", modType);
+            DialogueLogger.LogError($"Trying to parse custom tag {modType}, but it has an empty value");
             return;
         }
 
@@ -211,10 +212,16 @@ public class TextModifications
     // Return the command type if it's a custom command
     private Modifications isCustomTag(string command)
     {
+        command = command.ToLower();
+        // Simple tags
         if (command.Contains("speed"))
             return Modifications.SPEED;
         else if (command.Contains("sendmessage"))
             return Modifications.SEND_MESSAGE;
+        else if (command.Contains("removevariable"))
+            return Modifications.REMOVE_VARAIBLE;
+        else if (command.Contains("wait"))
+            return Modifications.WAIT;
 
         // Retrieval
         else if (command.Contains("retrieveshort"))
@@ -291,17 +298,18 @@ public class TextModifications
     private object parseModValue(Modifications modType, string commandText)
     {
         // We're already a string
-        if (modType == Modifications.SEND_MESSAGE)
+        if (modType == Modifications.SEND_MESSAGE || modType == Modifications.REMOVE_VARAIBLE)
             return commandText;
+
         // Parse float
-        else if (modType == Modifications.SPEED)
+        else if (modType == Modifications.SPEED || modType == Modifications.WAIT)
         {
             var floatVal = 0f;
             if (float.TryParse(commandText, out floatVal))
                 return floatVal;
         }
 
-        Debug.LogWarningFormat("Couldn't parse parameter value for {0} text modification", modType);
+        DialogueLogger.LogError($"Couldn't parse parameter value for {modType} text modification");
         return null;
     }
 
@@ -311,7 +319,7 @@ public class TextModifications
         var tempSplit = text.Split(separator);
         if (tempSplit.Length != 2)
         {
-            Debug.LogWarningFormat("Cannot parse command {0}", text);
+            DialogueLogger.LogError($"Cannot parse command {text}");
             return null;
         }
 
@@ -359,7 +367,8 @@ public class SimpleModification
         if (ModificationValue is T)
             return (T)ModificationValue;
 
-        throw new Exception($"Trying to cast variable of type {ModificationValue.GetType()} to type {typeof(T)}"); // Don't want to return default(T), gonna have to throw
+        DialogueLogger.LogError($"Trying to cast variable of type {ModificationValue.GetType()} to type {typeof(T)}. Returning default");
+        return default(T);
     }
 }
 
@@ -374,6 +383,7 @@ public class ComplexModification : SimpleModification
         if (ModificationContent is T)
             return (T)ModificationContent;
 
-        throw new Exception($"Trying to cast variable of type {ModificationContent.GetType()} to type {typeof(T)}"); // Don't want to return default(T), gonna have to throw
+        DialogueLogger.LogError($"Trying to cast variable of type {ModificationContent.GetType()} to type {typeof(T)}. Returning default");
+        return default(T);
     }
 }

@@ -37,10 +37,10 @@ public class ExampleDialogueUIController : BaseDialogueUIController
 
         _currentTimeBetweenChars = _defaultTimeBetweenChars;
 
-        // Events example
-        DialogueVariableRepo.Instance.VariableRegistered += variableRegistered;
-        DialogueVariableRepo.Instance.VariableUpdated += variableUpdated;
-        DialogueVariableRepo.Instance.VariableRemoved += variableRemoved;
+        // Actions example
+        DialogueVariableRepo.Instance.VariableRegistered += (key) => DialogueLogger.Log($"The variable {key} was added");
+        DialogueVariableRepo.Instance.VariableUpdated += (key) => DialogueLogger.Log($"The variable {key} was updated");
+        DialogueVariableRepo.Instance.VariableRemoved += (key) => DialogueLogger.Log($"The variable {key} was removed");
     }
 
     // Handle the UI Input
@@ -63,7 +63,7 @@ public class ExampleDialogueUIController : BaseDialogueUIController
                 {
                     if (!_optionButtons.IsShowingOptions)
                     {
-                        DialogueController.Next();
+                        DialogueController.Instance.Next();
                         _handledInput = true;
                     }
                 }
@@ -74,6 +74,9 @@ public class ExampleDialogueUIController : BaseDialogueUIController
             _currentTimeBetweenChars = _defaultTimeBetweenChars;
             _handledInput = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            DialogueController.Instance.StartConversation("test");
     }
 
     #endregion
@@ -105,14 +108,19 @@ public class ExampleDialogueUIController : BaseDialogueUIController
             {
                 // Simple modifications e.g. <command=value>
                 if (mod.ModType == TextModifications.Modifications.SPEED)
-                    _speedMultiplyer = mod.GetValue <float>();
+                    _speedMultiplyer = mod.GetValue<float>();
+                else if (mod.ModType == TextModifications.Modifications.REMOVE_VARAIBLE)
+                    DialogueVariableRepo.Instance.Remove(mod.GetValue<string>());
+                else if (mod.ModType == TextModifications.Modifications.WAIT)
+                    yield return new WaitForSeconds(mod.GetValue<float>());
+
                 // Complex modifications e.g. <command=value>content</command>
-                else if(mod.ModType == TextModifications.Modifications.SEND_MESSAGE)
+                else if (mod.ModType == TextModifications.Modifications.SEND_MESSAGE)
                 {
                     var revievingObject = GameObject.Find(mod.GetValue<string>());
-                    if(revievingObject == null)
+                    if (revievingObject == null)
                     {
-                        Debug.LogFormat("Trying to execute a send message command, but GameObject {0} was not found", mod.GetValue<string>());
+                        DialogueLogger.LogError($"Trying to execute a send message command, but GameObject {mod.GetValue<string>()} was not found");
                         continue;
                     }
 
@@ -127,7 +135,7 @@ public class ExampleDialogueUIController : BaseDialogueUIController
         _isAnimatingText = false;
 
         if (autoProceed)
-            DialogueController.Next();
+            DialogueController.Instance.Next();
         else
             _nextArrow.Show();
     }
@@ -142,7 +150,7 @@ public class ExampleDialogueUIController : BaseDialogueUIController
     // An option was selected
     public override void OptionButtonClicked(int index)
     {
-        DialogueController.OptionSelected(index);
+        DialogueController.Instance.OptionSelected(index);
     }
 
     // Close the UI
@@ -154,12 +162,4 @@ public class ExampleDialogueUIController : BaseDialogueUIController
         _nameBox.SetName(string.Empty);
         _optionButtons.HideOptions();
     }
-
-    #region Events
-
-    private void variableRegistered(object _, VariableEventArgs args) => Debug.LogFormat("The variable {0} was added", args.VariableKey);
-    private void variableUpdated(object _, VariableEventArgs args) => Debug.LogFormat("The variable {0} was updated", args.VariableKey);
-    private void variableRemoved(object _, VariableEventArgs args) => Debug.LogFormat("The variable {0} was removed", args.VariableKey);
-
-    #endregion
 }

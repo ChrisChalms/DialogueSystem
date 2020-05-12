@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private PlayerAnimation _animation;
     private PlayerCollision _collision;
 
+    private bool _canMove;
     private float _inputAxis;
     private int _facingDirection; // 1 = Right, -1 = Left
     private string _hittingCharacter;
@@ -36,16 +37,20 @@ public class PlayerController : MonoBehaviour
         _animation = GetComponentInChildren<PlayerAnimation>();
         _collision = GetComponent<PlayerCollision>();
 
+        _canMove = true;
         _facingDirection = 1;
-    }
 
+        // Actions
+        DialogueController.Instance.ConversationStarted += () =>_canMove = false;
+        DialogueController.Instance.ConversationEnded += () => _canMove = true;
+    }
     // Input loop
     private void Update()
     {
         _inputAxis = Input.GetAxisRaw("Horizontal");
 
         // Flip the sprite if we need to
-        if ((_inputAxis > 0 && _facingDirection == -1) || (_inputAxis < 0 && _facingDirection == 1))
+        if (_canMove && (_inputAxis > 0 && _facingDirection == -1) || (_inputAxis < 0 && _facingDirection == 1))
             changeFacingDirection();
 
         _animation.UpdateVelocity(_rb.velocity);
@@ -56,6 +61,9 @@ public class PlayerController : MonoBehaviour
     // Move the player
     private void FixedUpdate()
     {
+        if (!_canMove)
+            return;
+
         // Side movement
         if(_inputAxis != 0)
             _rb.velocity = new Vector2(_inputAxis * (_collision.IsGrounded ? _movementSpeed : _airMovementSpeed), _rb.velocity.y);

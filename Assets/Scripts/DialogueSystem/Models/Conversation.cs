@@ -80,7 +80,7 @@ public class Condition
             case "<=": _comparer = new LessToEqualTo(); break;
             case "==": _comparer = new EqualTo(); break;
             case "!=": _comparer = new NotEqualTo(); break;
-            default: Debug.LogWarningFormat("Unsupported comparison operator {0} used", Comparison); break;
+            default: DialogueLogger.LogError($"Unsupported comparison operator {Comparison} used"); break;
         }
     }
 
@@ -90,7 +90,7 @@ public class Condition
         // Check the comparer
         if(_comparer == null)
         {
-            Debug.LogWarning("Trying to evaluate a condition, but the comparison operator is null");
+            DialogueLogger.LogError("Trying to evaluate a condition, but the comparison operator is null");
             return false;
         }
 
@@ -100,7 +100,7 @@ public class Condition
 
         if (var1 == null || var2 == null)
         {
-            Debug.LogWarning("Trying to evaluate a condition but one or more of the variables are null");
+            DialogueLogger.LogWarning($"Trying to evaluate a condition but one or more of the variables are null");
             return false;
         }
 
@@ -126,7 +126,7 @@ public class Variable
             return DialogueVariableRepo.Instance.Retrieve<T>(Name);
 
         if (_castValue == null)
-            Debug.LogWarningFormat("Trying to retrieve a variable value for comparison that is null");
+            DialogueLogger.LogError("Trying to retrieve a variable value for comparison that is null");
 
         return (T)_castValue;
     }
@@ -138,7 +138,7 @@ public class Variable
             return DialogueVariableRepo.Instance.Retrieve(Name);
 
         if (_castValue == null)
-            Debug.LogWarningFormat("Trying to retrieve a variable value for comparison that is null");
+            DialogueLogger.LogError("Trying to retrieve a variable value for comparison that is null");
 
         return _castValue;
     }
@@ -164,7 +164,7 @@ public class Variable
                     break;
                 case "bool": _castValue = bool.Parse(Value); break;
                 case "string": _castValue = Value; break;
-                default: Debug.LogWarningFormat("Unsupported type {0} using in variable", Type); break;
+                default: DialogueLogger.LogError($"Unsupported type {Type} using in variable"); break;
             }
         }
     }

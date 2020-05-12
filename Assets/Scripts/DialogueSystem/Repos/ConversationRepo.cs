@@ -6,7 +6,6 @@ using UnityEngine;
 // Parses and stores all the conversations for this scene. 
 public class ConversationRepo : MonoBehaviour
 {
-    private static ConversationRepo _instance;
 
     [SerializeField]
     private List<TextAsset> _conversationsToLoad;
@@ -14,15 +13,15 @@ public class ConversationRepo : MonoBehaviour
     private Dictionary<string, Conversation> _conversations;
     private IDeserializer _deserializer;
 
-    public static ConversationRepo Instance => _instance;
+    public static ConversationRepo Instance { get; private set; }
 
     #region MonoBehaviour
 
     // Apply singleton
     private void Awake()
     {
-        if (_instance == null)
-            _instance = this;
+        if (Instance == null)
+            Instance = this;
 
         new DialogueVariableRepo();
 
@@ -43,7 +42,7 @@ public class ConversationRepo : MonoBehaviour
             var tempObject = _deserializer.Deserialize<Conversation>(file.text);
             if (tempObject == null)
             {
-                Debug.LogWarningFormat("There was an error deserializing file {0}", file.name);
+                DialogueLogger.LogError($"There was an error deserializing file {file.name}");
                 return;
             }
 
@@ -61,14 +60,14 @@ public class ConversationRepo : MonoBehaviour
         var tempObject = _deserializer.Deserialize<Conversation>(file.text);
         if(tempObject == null)
         {
-            Debug.LogWarningFormat("There was an error deserializing file {0}", file.name);
+            DialogueLogger.LogError($"There was an error deserializing file {file.name}");
             return;
         }
 
         if (valdateConversation(tempObject, file.name))
         {
             if (_conversations.ContainsKey(name))
-                Debug.LogWarningFormat("Conversation {0} already registered, overwritting", name);
+                DialogueLogger.LogWarning($"Conversation {name} already registered, overwritting");
 
             _conversations[name] = tempObject;
             tempObject.FinishedParsing();
@@ -83,7 +82,7 @@ public class ConversationRepo : MonoBehaviour
         // Check number of dialogues
         if(tempConversation.Dialogues.Count == 0)
         {
-            Debug.LogWarningFormat("Empty conversation in file {0}", fileName);
+            DialogueLogger.LogError($"Empty conversation in file {fileName}");
             return false;
         }
 
@@ -93,7 +92,7 @@ public class ConversationRepo : MonoBehaviour
             // Check sentence count
             if(diag.Sentences.Count == 0)
             {
-                Debug.LogWarningFormat("Dialogue in file {0} has no sentences", fileName);
+                DialogueLogger.LogError($"Dialogue in file {fileName} has no sentences");
                 return false;
             }
 
@@ -102,7 +101,7 @@ public class ConversationRepo : MonoBehaviour
             {
                 if (string.IsNullOrEmpty(sentence))
                 {
-                    Debug.LogWarningFormat("Empty sentence in file {0}", fileName);
+                    DialogueLogger.LogError($"Empty sentence in file {fileName}");
                     return false;
                 }
             }
@@ -119,7 +118,7 @@ public class ConversationRepo : MonoBehaviour
             {
                 if(!dialogueIds.Contains(diag.NextId))
                 {
-                    Debug.LogWarningFormat("Dialoge in file {0} references a dialogue by id {1} that doesn't exist", fileName, diag.NextId);
+                    DialogueLogger.LogError($"Dialoge in file {fileName} references a dialogue by id {diag.NextId} that doesn't exist");
                     return false;
                 }
             }
@@ -131,14 +130,14 @@ public class ConversationRepo : MonoBehaviour
                 // TODO: Dialogue OnComplete actions might solve this issue. Just do it
                 if(diag.NextId != -1)
                 {
-                    Debug.LogWarningFormat("Dialogue in file {0} has a nextId value, so can't have options", fileName);
+                    DialogueLogger.LogError($"Dialogue in file {fileName} has a nextId value, so can't have options");
                     return false;
                 }
 
                 // Check text
                 if(string.IsNullOrEmpty(option.Text))
                 {
-                    Debug.LogWarningFormat("Empty option in file {0}", fileName);
+                    DialogueLogger.LogError($"Empty option in file {fileName}");
                     return false;
                 }
 
@@ -146,7 +145,7 @@ public class ConversationRepo : MonoBehaviour
                 // TODO: Might need to change this if you want an option that goes nowhere, but performs an action if/when they ever get implemented
                 if(!dialogueIds.Contains(option.NextId) || option.NextId == -1)
                 {
-                    Debug.LogWarningFormat("Dialogue option has a nextId {0} that doesn't exist, or it goes nowhere in file {1}", option.NextId, fileName);
+                    DialogueLogger.LogError($"Dialogue option has a nextId {option.NextId} that doesn't exist, or it goes nowhere in file {fileName}");
                     return false;
                 }
             }
@@ -157,7 +156,7 @@ public class ConversationRepo : MonoBehaviour
                 // Can only test 2 varaibles against each other. When a conversation is picked all conditions must evaluate to true, so if more tests are needed just stack conditions
                 if (con.Variables.Count != 2)
                 {
-                    Debug.LogWarningFormat("A condition in file {0} does not contains {1} variables, must have 2", fileName, con.Variables.Count);
+                    DialogueLogger.LogError($"A condition in file {fileName} does not contains {con.Variables.Count} variables, must have 2");
                     return false;
                 }
 
@@ -169,14 +168,14 @@ public class ConversationRepo : MonoBehaviour
                     {
                         if (!variable.FromRepo)
                         {
-                            Debug.LogWarningFormat("A condition variable in file {0} has a conditional varialbe without a value. One is required if not retrieving from the variable repo", fileName);
+                            DialogueLogger.LogError($"A condition variable in file {fileName} has a conditional varialbe without a value. One is required if not retrieving from the variable repo");
                             return false;
                         }
                     }
                     else
                     {
                         if(variable.FromRepo)
-                            Debug.LogWarningFormat("A condition variable in file {0} has a value it will be ignored as the variable is marked to be retrieved from the variable repo", fileName);
+                            DialogueLogger.LogWarning($"A condition variable in file {fileName} has a value it will be ignored as the variable is marked to be retrieved from the variable repo");
                     }
 
                     // A type is required if we're not retrieving from the repo
@@ -184,14 +183,14 @@ public class ConversationRepo : MonoBehaviour
                     {
                         if (!variable.FromRepo)
                         {
-                            Debug.LogWarningFormat("A condition in file {0} has a conditional variable without a type. One is required if not retrieving from the variable repo", fileName);
+                            DialogueLogger.LogError($"A condition in file {fileName} has a conditional variable without a type. One is required if not retrieving from the variable repo");
                             return false;
                         }
                     }
                     else
                     {
                         if(variable.FromRepo)
-                            Debug.LogWarningFormat("A condition variable in file {0} has a type but will be ignored as the variable is marked to be retrieved from the variable repo", fileName);
+                            DialogueLogger.LogWarning($"A condition variable in file {fileName} has a type but will be ignored as the variable is marked to be retrieved from the variable repo");
                     }
 
                     // Check there's a name if we're retrieving from the repo
@@ -199,14 +198,14 @@ public class ConversationRepo : MonoBehaviour
                     {
                         if(variable.FromRepo)
                         {
-                            Debug.LogWarningFormat("A condition variable in the file {0} does not have a name value, one is required for retrieval from the varialbe repo", fileName);
+                            DialogueLogger.LogError($"A condition variable in the file {fileName} does not have a name value, one is required for retrieval from the varialbe repo");
                             return false;
                         }
                     }
                     else
                     {
                         if (!variable.FromRepo)
-                            Debug.LogWarningFormat("A condition variable in the file {0} has name value but will be ignored as the variable is not marked to be retrieved from the variable repo", fileName);
+                            DialogueLogger.LogWarning($"A condition variable in the file {fileName} has name value but will be ignored as the variable is not marked to be retrieved from the variable repo");
                     }
                 }
 
@@ -219,7 +218,7 @@ public class ConversationRepo : MonoBehaviour
                 {
                     if (con.Comparison != "==" && con.Comparison != "!=")
                     {
-                        Debug.LogWarningFormat("String and booleans can only use the == and != equality operators. Condition in file {0} is trying to use {1}", fileName, con.Comparison);
+                        DialogueLogger.LogError($"String and booleans can only use the == and != equality operators. Condition in file {fileName} is trying to use {con.Comparison}");
                         return false;
                     }
                 }
@@ -231,7 +230,7 @@ public class ConversationRepo : MonoBehaviour
                     // Check they're compatible
                     if(var1LowerType != var2LowerType)
                     {
-                        Debug.LogWarningFormat("Conversation file {0} has a condition with an unsupported variable comparison. Strings or booleans can only be tested against each other", fileName);
+                        DialogueLogger.LogError($"Conversation file {fileName} has a condition with an unsupported variable comparison. Strings or booleans can only be tested against each other");
                         return false;
                     }
                 }
