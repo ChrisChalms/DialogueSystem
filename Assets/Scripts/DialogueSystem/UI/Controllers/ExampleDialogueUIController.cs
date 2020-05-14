@@ -14,6 +14,7 @@ public class ExampleDialogueUIController : BaseDialogueUIController
 
     private DialogueBox _dialogueBox;
     private NameBox _nameBox;
+    private CharacterSpriteBox _spriteBox;
     private OptionsButtonController _optionButtons;
     private NextArrow _nextArrow;
     private WaitForSeconds _firstSentenceDelay; // Time to wait before starting to write the text if the box isn't already in place
@@ -31,6 +32,7 @@ public class ExampleDialogueUIController : BaseDialogueUIController
     {
         _dialogueBox = GetComponent<DialogueBox>();
         _nameBox = transform.Find("NameBox").GetComponent<NameBox>();
+        _spriteBox = transform.Find("CharacterSpriteMask").GetComponent<CharacterSpriteBox>();
         _optionButtons = transform.Find("Options").GetComponent<OptionsButtonController>();
         _nextArrow = transform.Find("NextArrow").GetComponent<NextArrow>();
         _firstSentenceDelay = new WaitForSeconds(0.3f);
@@ -79,20 +81,23 @@ public class ExampleDialogueUIController : BaseDialogueUIController
     #endregion
 
     // Animate the sentence text and handle the custom tags
-    public override IEnumerator ShowSentence(string speaker, TextModifications textMods, bool autoProceed = false)
+    public override IEnumerator ShowSentence(string speakersName, TextModifications textMods, Sprite characterSprite, bool sameSpeakerAsLastDialogue = true, bool autoProceed = false)
     {
         _isAnimatingText = true;
         _speedMultiplyer = 1;
         _nextArrow.Hide();
         _dialogueBox.Show(false);
         _dialogueBox.SetSentence(textMods.Sentence);
-        _nameBox.SetName(speaker);
+        _nameBox.SetName(speakersName);
         _optionButtons.HideOptions();
+        if(!sameSpeakerAsLastDialogue)
+            _spriteBox.ChangeSprite(characterSprite);
 
         // This is the first sentence, wait a little for the box to fully animate into place
         if (!_isShowing)
         {
             _isShowing = true;
+            _spriteBox.ChangeSprite(characterSprite);
             yield return _firstSentenceDelay;
         }
 
@@ -103,26 +108,32 @@ public class ExampleDialogueUIController : BaseDialogueUIController
             var mods = textMods.GetAnyTextModsForPosition(i);
             foreach (var mod in mods)
             {
+                // Commands
+                if (mod.ModType == TextModifications.Modifications.HIDE_SPRITE)
+                    _spriteBox.ChangeSprite(null);
+
                 // Simple modifications e.g. <command=value>
-                if (mod.ModType == TextModifications.Modifications.SPEED)
-                    _speedMultiplyer = mod.GetValue<float>();
+                else if (mod.ModType == TextModifications.Modifications.SPEED)
+                    _speedMultiplyer = (mod as SimpleModification).GetValue<float>();
                 else if (mod.ModType == TextModifications.Modifications.REMOVE_VARAIBLE)
-                    DialogueVariableRepo.Instance.Remove(mod.GetValue<string>());
+                    DialogueVariableRepo.Instance.Remove((mod as SimpleModification).GetValue<string>());
                 else if (mod.ModType == TextModifications.Modifications.WAIT)
-                    yield return new WaitForSeconds(mod.GetValue<float>());
+                    yield return new WaitForSeconds((mod as SimpleModification).GetValue<float>());
 
                 // Complex modifications e.g. <command=value>content</command>
                 else if (mod.ModType == TextModifications.Modifications.SEND_MESSAGE)
                 {
-                    var revievingObject = GameObject.Find(mod.GetValue<string>());
+                    var revievingObject = GameObject.Find((mod as SimpleModification).GetValue<string>());
                     if (revievingObject == null)
                     {
-                        DialogueLogger.LogError($"Trying to execute a send message command, but GameObject {mod.GetValue<string>()} was not found");
+                        DialogueLogger.LogError($"Trying to execute a send message command, but GameObject {(mod as SimpleModification).GetValue<string>()} was not found");
                         continue;
                     }
 
                     revievingObject.SendMessage((mod as ComplexModification).GetContent<string>(), SendMessageOptions.DontRequireReceiver);
                 }
+                else if (mod.ModType == TextModifications.Modifications.CHANGE_SPRITE)
+                    _spriteBox.ChangeSprite(DialogueSpriteRepo.Instance.RetrieveSprites((mod as SimpleModification).GetValue<string>(), (mod as ComplexModification).GetContent<string>()));
             }
 
             _dialogueBox.IncrementVisibleCharacters();

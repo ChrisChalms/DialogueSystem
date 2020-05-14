@@ -39,6 +39,6 @@ public class ConversationLoader : MonoBehaviour
             return;
         }
 
-        ConversationRepo.Instance.RegisterConversation(_name, _file);
+        DialogueConversationRepo.Instance.RegisterConversation(_name, _file);
     }
 }

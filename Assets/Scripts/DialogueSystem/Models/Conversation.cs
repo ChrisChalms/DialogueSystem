@@ -19,7 +19,9 @@ public class Dialogue
 {
     public int Id;
     public int NextId = -1;
-    public string Speaker;
+    public string SpeakersName;
+    public string CharacterSpritesName;
+    public string StartingSprite;
     public bool AutoProceed;
     public bool CanBeUsedAsStartingPoint = true;
 

@@ -6,7 +6,7 @@ using TMPro;
 public class DialogueBox : MonoBehaviour
 {
     private readonly float ON_Y = 20;
-    private readonly float OFF_Y = -530;
+    private readonly float OFF_Y = -640;
     private readonly float SHOWING_OPTIONS_Y = 200;
     private readonly float TWEEN_TIME = 0.3f;
 

@@ -20,6 +20,7 @@ public class DialogueController : MonoBehaviour
     
     private bool _inConversation;
     private int _currentSentence;
+    private string _lastSpeaker;
 
     public static DialogueController Instance { get; private set; }
 
@@ -52,7 +53,7 @@ public class DialogueController : MonoBehaviour
         }
 
         // Check if repo exists and the conversation has been loaded
-        var tempoConvo = ConversationRepo.Instance?.ResolveConversation(convoName);
+        var tempoConvo = DialogueConversationRepo.Instance?.RetrieveConversation(convoName);
         if (tempoConvo == null)
         {
             DialogueLogger.LogError($"Tried to start conversation {convoName} but it doesn't exist is the ConversationRepo");
@@ -87,7 +88,10 @@ public class DialogueController : MonoBehaviour
         _inConversation = true;
         _currentConversation = tempoConvo;
 
-        StartCoroutine(_uiController.ShowSentence(_currentDialogue.Speaker, parseSentenceForCustomTags(_currentDialogue.Sentences[_currentSentence]), _currentDialogue.AutoProceed));
+        StartCoroutine(_uiController.ShowSentence(_currentDialogue.SpeakersName,
+            parseSentenceForCustomTags(_currentDialogue.Sentences[_currentSentence]),
+            DialogueSpriteRepo.Instance.RetrieveSprites(_currentDialogue.CharacterSpritesName, string.IsNullOrEmpty(_currentDialogue.StartingSprite) ? "Default" : _currentDialogue.StartingSprite),
+            _currentDialogue.AutoProceed));
         ConversationStarted();
     }
 
@@ -119,7 +123,15 @@ public class DialogueController : MonoBehaviour
         {
             // There's more sentences to show
             _currentSentence++;
-            StartCoroutine(_uiController.ShowSentence(_currentDialogue.Speaker, parseSentenceForCustomTags(_currentDialogue.Sentences[_currentSentence]), _currentDialogue.AutoProceed));
+            
+            var sameSpeaker = _lastSpeaker == _currentDialogue.SpeakersName;
+            _lastSpeaker = _currentDialogue.SpeakersName;
+            
+            StartCoroutine(_uiController.ShowSentence(_currentDialogue.SpeakersName,
+                parseSentenceForCustomTags(_currentDialogue.Sentences[_currentSentence]),
+                (!sameSpeaker) ? DialogueSpriteRepo.Instance.RetrieveSprites(_currentDialogue.CharacterSpritesName, string.IsNullOrEmpty(_currentDialogue.StartingSprite) ? "Default" : _currentDialogue.StartingSprite) : null, //null, // After the conversation has started the sprite should be changed using the changeSprite tag
+                sameSpeaker,
+                _currentDialogue.AutoProceed));
         }
     }
 
@@ -142,6 +154,7 @@ public class DialogueController : MonoBehaviour
             return;
         }
 
+        _lastSpeaker = _currentDialogue.SpeakersName;
         _currentDialogue = nextDialogue;
         _currentSentence = -1; // Incremented in Next()
         Next();

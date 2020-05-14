@@ -3,19 +3,23 @@
     [
 		{
 			"id": 1,
+			"characterSpritesName": "TestCharacter",
+			"startingSprite": "Default",
 			"sentences":
             [
 				"I'm not part of this game, I'm just here to test some features.",
+				"You see my sprite? I can change that in at any point during the conversation, like this<speed=3>...<changeSprite=TestCharacter>NoHat</changeSprite><speed=1> See, no hat!",
+				"I can even get rid of it completely<hideSprite>.<wait=1.5> Or change it again and bring it back<changeSprite=TestCharacter>Default</changeSprite>.",
 				"My conversation was loaded when you walked over my trigger, using the handy event handler.",
 				"I can remember number shorts<registerShort=testShort>1</registerShort>, ints<registerInt=testInt>2</registerInt>, longs<registerLong=testLong>3</registerLong>, floats<registerFloat=testFloat>4</registerFloat>, bools<registerBool=testBool>true</registerBool>, and strings<registerString=testString>Five</registerString>.",
 				"I can then recall them: shorts(<retrieveShort=testShort>), ints(<retrieveInt=testInt>), longs(<retrieveLong=testLong>), floats(<retrieveFloat=testFloat>), bools(<retrieveBool=testBool>), and strings(<retrieveString=testString>).",
 				"Or forget a variable I remembered<removeVariable=testBool>.",
-				"I can send messages to external objects<sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>, to say<sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>, change the <sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>of a <sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>cloud.",
+				"I can send messages to external objects<sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>, to say<sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>, change the <sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>colour <sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>of a <sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>cloud<sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>.",
 				"I can wait for 1 <wait=1>second, 2<wait=2> seconds, or any really",
 				"<speed=0.1>I can go fast............",
 				"<speed=3>Or slow...",				
 				"There's even a handy logger that let's you know what's going with different log levels if you just want to see warnings or errors.",
-				"All without any code! If you want to see the rest of the example game, look at the earlier videos."
+				"All without any code! If you want to see the rest of the example game, go talk to the Wise Wizard"
 			]
 		}
 	]

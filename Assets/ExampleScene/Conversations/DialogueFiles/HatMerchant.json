@@ -6,7 +6,8 @@
 		{
 			"id": 1,
 			"nextId": 2,
-			"speaker": "Hat Merchant",
+			"speakersName": "Hat Merchant",
+			"characterSpritesName": "HatMerchant",
 			"sentences":
             [
 				"Uwww, a customer!",
@@ -18,7 +19,7 @@
 
 		{
 			"id": 2,
-			"speaker": "Adventurer",
+			"speakersName": "Adventurer",
 			"nextId": 3,
 			"canBeUsedAsStartingPoint": false,
 			"sentences":
@@ -28,7 +29,8 @@
 		},
 		{
 			"id": 3,
-			"speaker": "Hat Merchant",
+			"speakersName": "Hat Merchant",
+			"characterSpritesName": "HatMerchant",
 			"canBeUsedAsStartingPoint": false,
 			"sentences":
 			[
@@ -40,7 +42,8 @@
 		{
 			"id": 4,
 			"nextId": 5,
-			"speaker": "Hat Merchant",
+			"speakersName": "Hat Merchant",
+			"characterSpritesName": "HatMerchant",
 			"sentences":
 			[
 				"You haven't jumped yet!",
@@ -82,7 +85,7 @@
 		
 		{
 			"id": 5,
-			"speaker": "Adventurer",
+			"speakersName": "Adventurer",
 			"canBeUsedAsStartingPoint": false,
 			"sentences":
 			[
@@ -93,7 +96,8 @@
 		// We've got the jump quest but we've jumped less than the required 3. The equivalent of (trackingJumps && playerJumps > 0 && playerJumps < 3)
 		{
 			"id": 6,
-			"speaker": "Hat Merchant",
+			"speakersName": "Hat Merchant",
+			"characterSpritesName": "HatMerchant",
 			"sentences":
 			[
 				"Good start! Only a few more"
@@ -148,7 +152,8 @@
 		// We've completed the jump quest but haven't received our reward. The equivalent of (trackingJumps && _playerJumps >= 3 && !recievedJumpReward)
 		{
 			"id": 7,
-			"speaker": "Hat Merchant",
+			"speakersName": "Hat Merchant",
+			"characterSpritesName": "HatMerchant",
 			"sentences":
 			[
 				"Ahh, that's the stuff. Nothing quite like it. Here's your well earned reward, with an added bonus<registerbool=trackingJumps>false</registerbool><<registerbool=recievedJumpReward>true</registerbool><sendmessage=GameCanvas/Coins>Add17Coins</sendmessage>."
@@ -203,7 +208,8 @@
 		// We've completed the jump quest and recieved our reward. The equivalent of (_recievedJumpReward)
 		{
 			"id": 8,
-			"speaker": "Hat Merchant",
+			"speakersName": "Hat Merchant",
+			"characterSpritesName": "HatMerchant",
 			"sentences":
 			[
 				"...just flew through the air..",
