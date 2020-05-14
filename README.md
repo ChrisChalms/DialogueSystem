@@ -11,7 +11,7 @@ As well as the standard rich text tags, there are three different types of custo
   
   #### Command Tags
   
-  Currently there is only one command, <hideSprite>, which will hide the character's sprite box if it's showing
+  Currently there is only one command, ```<hideSprite>```, which will hide the character's sprite box if it's showing
   
   #### Simple Tags
   
