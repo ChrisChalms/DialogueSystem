@@ -17,16 +17,16 @@ As well as the standard rich text tags, there are three different types of custo
   
   Simple tags add the value parameter to the command tag, below are the currently supported simple tags:
   
-  - speed - Changes the palyback speed of the text e.g. <speed=3>
-  - removeVariable - Used to remove a registered variable from the variable repo at any point during a conversation e.g. <removeVariable=charactersName>
-  - wait - Waits for a secified time before continuing the conversation e.g. <wait=2>
+  - speed - Changes the palyback speed of the text e.g. ```<speed=3>```
+  - removeVariable - Used to remove a registered variable from the variable repo at any point during a conversation e.g. ```<removeVariable=charactersName>```
+  - wait - Waits for a secified time before continuing the conversation e.g. ```<wait=2>```
   
   #### Complex tags
   
   Complex tags contain a command, value, and content. Below are the supported complex tags:
   
-  - send message - Used to send messages at a given point during dialogue to external objects. Will show a warning if the reciever is not found e.g. <sendMessage=recievingObject>messageToSend</sendMessage>
-  - changeSprite - Can be used to control the character's dialogue sprite, and will show the sprite box if it's not already e.g. <changeSprite=CharactersName>SpriteName</changeSprite>
+  - send message - Used to send messages at a given point during dialogue to external objects. Will show a warning if the reciever is not found e.g. ```<sendMessage=recievingObject>messageToSend</sendMessage>```
+  - changeSprite - Can be used to control the character's dialogue sprite, and will show the sprite box if it's not already e.g. ```<changeSprite=CharactersName>SpriteName</changeSprite>```
   - Variable registration/retrieval - There's also the ability to register/retrieve variables through dialogue. They follow the same pattern register/retrieve + variable type pattern:
     - registerShort/retrieveshort
     - registerInt/retrieveInt
