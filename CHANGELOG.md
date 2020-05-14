@@ -2,6 +2,21 @@
 
 All notable changes will be documented here.
 
+## [v0.6](https://github.com/ChrisChalms/DialogueSystem/commit/db445328f95c5e2931bf6fdb0390e3864699ca98) - 14/05/2020
+
+### Added
+- ScriptableObject to store all of a character's sprites in one palce
+- Sprite repo with loader
+- Character sprites to the exmaple scene
+- Command tags
+- Sprite box to dialogue UI
+- hideSprite command
+- changeSprite complex command
+
+### Changed
+- Simple and complex tags now inherit from the simplest command tag
+- Changed the example scene to include the new sprite functionality
+
 ## [v0.55](https://github.com/ChrisChalms/DialogueSystem/commit/8e471d07396fa49c4b74faabb75c4cea4a40952e) - 12/05/2020
 
 ### Added
