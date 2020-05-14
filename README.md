@@ -1,9 +1,55 @@
 # Dialogue System
 
 A simple dialogue system for Unity with support for richtext tags, custom tags, and variable registration/retrieval.
-[Video of v0.45 example scene](https://youtu.be/Ppc4LU24weM)
+[Video of v0.55 functionality conversation](https://youtu.be/lKBrGYz3lkM). [Video of v0.45 example scene](https://youtu.be/Ppc4LU24weM)
 
 ## Usage
+
+### Tags
+
+As well as the standard rich text tags, there are two different types of custom tags available, simple and complex. Simple tags are single parameter tags that don't require a closing tag, like the speed tag below. e.g <command=value>. Complex tags allow for a tag to have content, such as the sendmessage tag below. e.g. <command=value>content</command>
+
+  - speed - Changes the palyback speed of the text
+  - wait - Wait for a secified time before continuing the conversation
+  - send message - Used to send messages at a given point during dialogue to external objects. Will show a warning if the reciever is not found
+  - removeVariable - Used to remove a variable from the variable repo at any point during a conversation
+  - Variable registration/retrieval - There's also the ability to register/retrieve variables through dialogue. they follow the same pattern register/retrieve + variable type pattern
+    - registerShort/retrieveshort
+    - registerInt/retrieveInt
+    - registerLong/retrieveLong
+    - registerFloat/retrieveFloat
+    - registerBool/retrieveBool
+    - registerString/retrieveString
+ 
+They're all pretty straight forward to use:
+ ```javascript
+ // Speed
+ "A normal speed sentence, <speed=3>a lot slower. <speed=1>And back to normal speed again"
+ 
+ // Send message
+ "Let's send a message<sendmessage=recievingGameObject>MessageToSend</sendmessage>. There you go, message send."
+ 
+ // Wait
+ "Wait just a second...<wait=1> Ok, carry on"
+ 
+ // Register short with the name savedShort and the value 1
+ "Let's save a short for retrieval later <registerShort=savedShort>1</registerShort>."
+ 
+ // Retrieve the short value
+ "Here's the short value we saved earlier <retrieveShort=savedShort>."
+ 
+ // Also works for the other variable types
+ "Time to save a string <registerString=charactersName>The Hero</registerString>."
+ 
+ // Get the name back
+ "Hello <retrieveString=charactersName>, long time no see."
+ 
+ // Forget the name
+ "Uhm, <removeVariable=charactersName>I've forgotten your name."
+ 
+ ```
+ 
+You can also manually register/retrieve/remove variables via the DialogueVarialbeRepo class, see the example scene for an implementation.
 
 ### Conversation options
  
@@ -108,53 +154,16 @@ A simple dialogue system for Unity with support for richtext tags, custom tags, 
 }
 
 ```
-
-### Tags
-
-As well as the standard rich text tags, there are two different types of custom tags available, simple and complex. Simple tags are single parameter tags that don't require a closing tag, like the speed tag below. e.g <command=value>. Complex tags allow for a tag to have content, such as the sendmessage tag below. e.g. <command=value>content</command>
-
-  - speed - Changes the palyback speed of the text
-  - send message - Used to send messages at a given point during dialogue to external objects. Will show a warning if the reciever is not found
-  
-  - Variable registration/retrieval - There's also the ability to register/retrieve variables through dialogue. they follow the same pattern register/retrieve + variable type pattern
-    - registershort/retrieveshort
-    - registerint/retrieveint
-    - registerlong/retrievelong
-    - registerfloat/retrievefloat
-    - registerbool/retrievebool
-    - registerstring/retrievestring
- 
-They're all pretty straight forward to use:
- ```javascript
- // Speed
- "A normal speed sentence, <speed=3>a lot slower. <speed=1>And back to normal speed again"
- 
- // Send message
- "Let's send a message<sendmessage=recievingGameObject>MessageToSend</sendmessage>. There you go, message send."
- 
- // Register short with the name savedShort and the value 1
- "Let's save a short for retrieval later <registershort=savedShort>1</registershort>."
- 
- // Retrieve the short value
- "Here's the short value we saved earlier <retrieveshort=savedShort>."
- 
- // Also works for the other variable types
- "Time to save a string <registerstring=charactersName>The Hero</registerstring>."
- 
- // Get the name back
- "Hello <retrievestring=charactersName>, long time no see."
- ```
- 
-You can also manually register/retrieve variables via the DialogueVarialbeRepo class, see the example scene for an implementation. Currently you can only remove a variable from the repo by calling the ` DialogueVariableRepo.Instance.Remove(key);`
  
  ## TODO
  - ~~Proof of concept v 0.1~~
  - ~~Add conversations to ConversationRepo and parse/validate in real time, not just on scene start~~
  - ~~Add some sort of generic event trigger so the conversations can be added, loaded, and triggered without code~~
- - Custom tag to allow for waiting during dialogue
- - Make simple tag to remove variable from the dialogue
+ - ~~Custom tag to allow for waiting during dialogue~~
+ - ~~Make simple tag to remove variable from the dialogue~~
  - ~~Conditional starting positions e.g. start at a different dialoue if a registered variable is a certain value~~
  - Some sort of OnStart, OnFinish optional action
+ - ~~Make a static logger~~
  - ~~Would be nice to specify the target of the sendmessage tag in the dialogue JSON~~
  - ~~Added helpful events to the variable repo for adding, updated, and removing~~
  - ~~Add more tag types~~
