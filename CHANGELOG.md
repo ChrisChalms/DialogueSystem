@@ -2,6 +2,20 @@
 
 All notable changes will be documented here.
 
+## [v0.65](https://github.com/ChrisChalms/DialogueSystem/commit/d2a3f36e7fcf60925e08059c1503e2d676ef6462) - 18/05/2020
+
+### Added
+- Actions: log, log warning, log error, close conversation, and send message
+- The ```selectedActions``` array to options
+- ```<performAction=actionName>``` simple tag
+- Extra validation to the conversation loader
+- ```DialogueAction``` class to the conversation.cs
+
+### Changed
+- Moved the core dialogue system into the new CC.DialogueSystem namespace
+- Moved everything not part of the core dialogue system into the ExampleScene folders
+- Example scene testing conversation now implements actions
+
 ## [v0.6](https://github.com/ChrisChalms/DialogueSystem/commit/db445328f95c5e2931bf6fdb0390e3864699ca98) - 14/05/2020
 
 ### Added
