@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using CC.DialogueSystem;
 
 public class CoinCounter : MonoBehaviour
 {

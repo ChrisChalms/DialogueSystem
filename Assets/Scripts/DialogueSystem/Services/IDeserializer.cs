@@ -1,4 +1,7 @@
-﻿public interface IDeserializer
+﻿namespace CC.DialogueSystem
 {
-    T Deserialize<T>(string text);
+    public interface IDeserializer
+    {
+        T Deserialize<T>(string text);
+    }
 }

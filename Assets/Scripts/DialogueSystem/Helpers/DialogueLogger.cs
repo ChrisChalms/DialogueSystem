@@ -1,35 +1,38 @@
 ﻿using UnityEngine;
 
-public class DialogueLogger
+namespace CC.DialogueSystem
 {
-    public enum LogLevel
+    public class DialogueLogger
     {
-        DEBUG,
-        WARNING,
-        ERROR
+        public enum LogLevel
+        {
+            DEBUG,
+            WARNING,
+            ERROR
+        }
+
+        /** This gets sets in the DialogueController via the inspector then passed here in the Awake(). 
+         * Not too keen on the implementation, but it's the most object to the dialoguye system, and it's the first palce I'd look.
+         * Maybe if there's enough things that need setting we should make a settings class, the DialogueController works right now
+         * */
+        public static int CurrentLogLevel;
+
+        public static void Log(string message)
+        {
+            if (CurrentLogLevel > 0)
+                return;
+
+            Debug.Log(message);
+        }
+
+        public static void LogWarning(string message)
+        {
+            if (CurrentLogLevel > 1)
+                return;
+
+            Debug.LogWarning(message);
+        }
+
+        public static void LogError(string message) => Debug.LogError(message);
     }
-
-    /** This gets sets in the DialogueController via the inspector then passed here in the Awake(). 
-     * Not too keen on the implementation, but it's the most object to the dialoguye system, and it's the first palce I'd look.
-     * Maybe if there's enough things that need setting we should make a settings class, the DialogueController works right now
-     * */
-    public static int CurrentLogLevel;
-
-    public static void Log(string message)
-    {
-        if (CurrentLogLevel > 0)
-            return;
-
-        Debug.Log(message);
-    }
-
-    public static void LogWarning(string message)
-    {
-        if (CurrentLogLevel > 1)
-            return;
-
-        Debug.LogWarning(message);
-    }
-
-    public static void LogError(string message) => Debug.LogError(message);
 }

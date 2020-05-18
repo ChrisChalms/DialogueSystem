@@ -2,43 +2,46 @@
 
 using UnityEngine;
 
-public class CharacterSpriteLoader : MonoBehaviour
+namespace CC.DialogueSystem
 {
-    [SerializeField]
-    private DialogueSprites_SO _spritesObject;
-    [SerializeField]
-    private string _name;
-    [SerializeField]
-    private bool _registerOnStart;
-
-    #region MonoBehaviour
-
-    // Initialize
-    private void Start()
+    public class CharacterSpriteLoader : MonoBehaviour
     {
-        if (_registerOnStart)
-            LoadSprites();
-    }
+        [SerializeField]
+        private DialogueSprites_SO _spritesObject;
+        [SerializeField]
+        private string _name;
+        [SerializeField]
+        private bool _registerOnStart;
 
-    #endregion
+        #region MonoBehaviour
 
-    // Send the character sprites to the repo
-    public void LoadSprites()
-    {
-        // Can't load if there's no name
-        if (string.IsNullOrEmpty(_name))
+        // Initialize
+        private void Start()
         {
-            DialogueLogger.LogError($"Object {gameObject.name} cannot register character sprites without a name");
-            return;
+            if (_registerOnStart)
+                LoadSprites();
         }
 
-        // Can't load if there's no sprites object
-        if (_spritesObject == null)
-        {
-            DialogueLogger.LogError($"Object {gameObject.name} has an empty sprites object variable");
-            return;
-        }
+        #endregion
 
-        DialogueSpriteRepo.Instance.RegisterCharacterSprites(_name, _spritesObject);
+        // Send the character sprites to the repo
+        public void LoadSprites()
+        {
+            // Can't load if there's no name
+            if (string.IsNullOrEmpty(_name))
+            {
+                DialogueLogger.LogError($"Object {gameObject.name} cannot register character sprites without a name");
+                return;
+            }
+
+            // Can't load if there's no sprites object
+            if (_spritesObject == null)
+            {
+                DialogueLogger.LogError($"Object {gameObject.name} has an empty sprites object variable");
+                return;
+            }
+
+            DialogueSpriteRepo.Instance.RegisterCharacterSprites(_name, _spritesObject);
+        }
     }
 }

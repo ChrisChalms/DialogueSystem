@@ -983,7 +983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05b2977d87b20b748b221143f3c2215c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _logLevel: 2
+  _logLevel: 0
   _uiController: {fileID: 428394534}
 --- !u!4 &328772070
 Transform:
@@ -5409,7 +5409,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: v0.6
+  m_Text: v0.65
 --- !u!222 &2085627715
 CanvasRenderer:
   m_ObjectHideFlags: 0

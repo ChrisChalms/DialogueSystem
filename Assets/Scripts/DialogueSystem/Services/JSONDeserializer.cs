@@ -1,9 +1,12 @@
 ﻿using Newtonsoft.Json;
 
-public class JSONDeserializer : IDeserializer
+namespace CC.DialogueSystem
 {
-    public T Deserialize<T>(string text)
+    public class JSONDeserializer : IDeserializer
     {
-        return JsonConvert.DeserializeObject<T>(text);
+        public T Deserialize<T>(string text)
+        {
+            return JsonConvert.DeserializeObject<T>(text);
+        }
     }
 }

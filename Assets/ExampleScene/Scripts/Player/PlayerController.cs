@@ -1,6 +1,7 @@
 ﻿#pragma warning disable 649
 
 using UnityEngine;
+using CC.DialogueSystem;
 
 public class PlayerController : MonoBehaviour
 {

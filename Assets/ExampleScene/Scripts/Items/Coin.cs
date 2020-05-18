@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using CC.DialogueSystem;
 
 public class Coin : MonoBehaviour
 {

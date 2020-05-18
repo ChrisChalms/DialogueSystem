@@ -2,43 +2,46 @@
 
 using UnityEngine;
 
-public class ConversationLoader : MonoBehaviour
+namespace CC.DialogueSystem
 {
-    [SerializeField]
-    private TextAsset _file;
-    [SerializeField]
-    private string _name;
-    [SerializeField]
-    private bool _registerOnStart; 
-
-    #region MonoBehaviour
-
-    // Initialize
-    private void Start()
+    public class ConversationLoader : MonoBehaviour
     {
-        if (_registerOnStart)
-            LoadConversation();
-    }
+        [SerializeField]
+        private TextAsset _file;
+        [SerializeField]
+        private string _name;
+        [SerializeField]
+        private bool _registerOnStart;
 
-    #endregion
+        #region MonoBehaviour
 
-    // Sends the conversation to the repo
-    public void LoadConversation()
-    {
-        // Can't load if there's no name
-        if (string.IsNullOrEmpty(_name))
+        // Initialize
+        private void Start()
         {
-            DialogueLogger.LogError($"Object {gameObject.name} cannot register a conversation without a name");
-            return;
+            if (_registerOnStart)
+                LoadConversation();
         }
 
-        // Can't load if there's no conversation
-        if(_file == null)
-        {
-            DialogueLogger.LogError($"Object {gameObject.name} has an empty conversation file");
-            return;
-        }
+        #endregion
 
-        DialogueConversationRepo.Instance.RegisterConversation(_name, _file);
+        // Sends the conversation to the repo
+        public void LoadConversation()
+        {
+            // Can't load if there's no name
+            if (string.IsNullOrEmpty(_name))
+            {
+                DialogueLogger.LogError($"Object {gameObject.name} cannot register a conversation without a name");
+                return;
+            }
+
+            // Can't load if there's no conversation
+            if (_file == null)
+            {
+                DialogueLogger.LogError($"Object {gameObject.name} has an empty conversation file");
+                return;
+            }
+
+            DialogueConversationRepo.Instance.RegisterConversation(_name, _file);
+        }
     }
 }
