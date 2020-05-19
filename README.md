@@ -1,7 +1,7 @@
 # Dialogue System
 
 A simple dialogue system for Unity with support for richtext tags, custom tags, and variable registration/retrieval/removal, conditional starting points, dialogue actions.
-[Video of v0.65 example scene](https://youtu.be/xWGQUlyYGjg)
+[Video of v0.68 example scene](https://youtu.be/IlXwr7wfiRM)
 
 ## Usage
 
@@ -110,7 +110,7 @@ Each conversation file is made up of at least one dialogue object, there are a n
 ```
 
 ### Actions
-Action are events that can be triggered from the dialogue text using the ```performAction``` simple tag, or an option using the ```selectedActions```. An option can contain multiple actions that will be executed in the order they're written in the array. The available action types are:
+Action are events that can be triggered from the dialogue text using the ```action``` simple tag, or passed messages or targets using the complex tags ```actionWithMessage``` and ```actionWithTarget```, or an option using the ```selectedActions``` array. An option can contain multiple actions that will be executed in the order they're written in the array. The available action types are:
   - Log
   - Log Warning
   - Log Error
@@ -129,7 +129,9 @@ Here's an example of a conversation with five options that are triggered in diff
             "id": 1,
             "sentences":
             [
-                "Let's perform some actions! From the dialogue <performAction=logNormal>?"
+                "Let's perform some actions! From the dialogue <performAction=logNormal>?",
+                "Or let's just load a level <action=LoadLevel>.",
+                "Or load a certain level <actionWithMessage=LoadCertainLevel>NextLevel</actionWithMessage>"
             ],
             "options":
             [
@@ -145,6 +147,7 @@ Here's an example of a conversation with five options that are triggered in diff
             ]
         },
     ],
+    
     // Actions
     "actions":
     [
@@ -182,6 +185,13 @@ Here's an example of a conversation with five options that are triggered in diff
             "target": "GameObject Target",
             "message": "LoadNextLevel"
         },
+
+        // Load a particular level
+        {
+        	"name": "LoadCertainLevel",
+            "type": "sendMessage",
+            "target": "GameObject Target"
+        }
     ]
 }
 
@@ -193,7 +203,7 @@ As well as the standard rich text tags, there are three different types of custo
   
   #### Command Tags
   
-  Currently there is only one command, ```<hideSprite>```, which will hide the character's sprite box if it's showing
+  Commands are the simplest custom tag, they don't require and value, content, or closing tags. Currently there is only one command, ```<hideSprite>```, which will hide the character's sprite box if it's showing
   
   #### Simple Tags
   
@@ -203,6 +213,9 @@ As well as the standard rich text tags, there are three different types of custo
   - removeVariable - Used to remove a registered variable from the variable repo at any point during a conversation e.g. ```<removeVariable=charactersName>```
   - wait - Waits for a secified time before continuing the conversation e.g. ```<wait=2>```
   - performAction - Execute a registered action by name e.g. ```<performAction=actionName>```
+  - log - Logs a message via the DialogueLogger e.g. ```<log=A message from the conversation>```
+  - logWarning - Logs a warning via the DialogueLogger e.g. ```<logWarning=A warning message from the conversation>```
+  - logError - Logs an errer via the DialogueLogger e.g. ```<logError=An error message from the conversation>```
   
   #### Complex tags
   
@@ -210,6 +223,8 @@ As well as the standard rich text tags, there are three different types of custo
   
   - send message - Used to send messages at a given point during dialogue to external objects. Will show a warning if the reciever is not found e.g. ```<sendMessage=recievingObject>messageToSend</sendMessage>```
   - changeSprite - Can be used to control the character's dialogue sprite, and will show the sprite box if it's not already e.g. ```<changeSprite=CharactersName>SpriteName</changeSprite>```
+  - actionWithMessage - This is used to provide or override an action's message value e.g. ```<actionWithMessage=LevelLoader>LevelToLoad</actionWithMessage>```
+  - actionWithTarget - This is used to add or override an action's target value e.g. ```<actionWithTarget=sendDestroyMessage>targetToDestroy</actionWithTarget>```
   - Variable registration/retrieval - There's also the ability to register/retrieve variables through dialogue. They follow the same pattern register/retrieve + variable type pattern:
     - registerShort/retrieveshort
     - registerInt/retrieveInt
@@ -228,6 +243,9 @@ They're all pretty straight forward to use:
  
  // Wait
  "Wait just a second...<wait=1> Ok, carry on"
+ 
+ // Logging
+ "Let me just make a note of that real fast, <log=All good> Oh no! <logWarning=Not so good>That's not supposed to happen<logError=Not good>"
  
  // Register short with the name savedShort and the value 1
  "Let's save a short for retrieval later <registerShort=savedShort>1</registerShort>."
@@ -251,8 +269,13 @@ They're all pretty straight forward to use:
  "Actually, I don't want you to see me..<hideSprite>."
  
  // Perform an action to load a level
- "Let's go to the next area..<performAction=loadNextLevel>."
+ "Let's go to the next area..<action=loadNextLevel>."
  
+ // Advanced actions
+ "Let's load load a particular level <actionWithMessage=loadLevel>LevelToLoad</actionWithMessage>!"
+ "Let's destroy things <actionWithTarget=destroyObject>Object/To/Destroy</actionWithTarget>"
+ 
+
  ```
  
 You can also manually register/retrieve/remove variables via the DialogueVariableRepo class.
@@ -275,7 +298,9 @@ You can also manually register/retrieve/remove variables via the DialogueVariabl
  - ~~Add a sprite repo and sprite loader, similar to the conversation loader, with loading/validation~~
  - ~~Custom tags to change, update, and hide the dialogue character's sprite~~
  - ~~Actions for options~~
+ - ~~Advanced actions with tags to pass messages and targets~~
  - ~~Custom simple tag to execute an action from dialogue~~
+ - ~~Logging complex tags~~
  - Add actions to more places?
  - A custom inspector to show registered variables, conversations, and sprites would be nice
  - Would like to add XML support
