@@ -2,6 +2,20 @@
 
 All notable changes will be documented here.
 
+## [v0.68](https://github.com/ChrisChalms/DialogueSystem/commit/026ff08ccca7e5488f13820f3463e26481135a8e) - 19/05/2020
+
+### Added
+- Logging simple tags: log, logWarning, logError
+- Comlex tags to use advanced actions: actionWithMessage, actionWithTarget
+- Simple tag to execute an action: action
+- ActionController ot handle the finding, validation, and execution of actions
+
+### Changed
+- Conversation validation to allow actions with empty messages or targets
+
+### Removed
+- performAction custom tag. Replaced with action simple tag
+
 ## [v0.65](https://github.com/ChrisChalms/DialogueSystem/commit/d2a3f36e7fcf60925e08059c1503e2d676ef6462) - 18/05/2020
 
 ### Added
