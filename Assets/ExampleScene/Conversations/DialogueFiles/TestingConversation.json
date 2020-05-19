@@ -37,8 +37,10 @@
 			"sentences":
 			[
 				"I can even perform those actions at any point during the dialogue, I'll perform all of the logging actions again<speed=3>...<performAction=logNormal><performAction=logAWarning><performAction=logAnError>.",
+				"I can even pass messages or targets to those actions<actionWithMessage=logNormal>Unique message</actionWithMessage>!",
+				"Or just log using the custom tags<log=A normal log message><logWarning=A warning!><logError=An error log!>.",
 				"I can send messages to external objects<sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>, to say<sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>, change the <sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>colour <sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>of a <sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>cloud<sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>.",
-				"I can <performAction=changeCloudColour>do the <performAction=resetCloudColoud>same thing<performAction=changeCloudColour> but using <performAction=resetCloudColoud>actions<performAction=changeCloudColour><wait=1><performAction=resetCloudColoud>.",
+				"I can <action=changeCloudColour>do the <action=resetCloudColoud>same thing<actionWithMessage=sendMessageToCloud>changeColour</actionWithMessage> but using <actionWithTarget=resetAColour>Decorations/Background/Cloud2</actionWithTarget>actions<action=changeCloudColour>. Some of those of those actions<action=resetCloudColoud> used passed messages and targets for more control.",
 				"You see my sprite? I can change that in at any point during the conversation, like this<speed=3>...<changeSprite=TestCharacter>NoHat</changeSprite><speed=1> See, no hat!",
 				"I can even get rid of it completely<hideSprite>.<wait=1.5> Or change it again and bring it back<changeSprite=TestCharacter>Default</changeSprite>.",
 				"My conversation was loaded when you walked over my trigger, using the handy event handler.",
@@ -97,6 +99,20 @@
 			"name": "resetCloudColoud",
 			"type": "sendMessage",
 			"target": "Decorations/Background/Cloud2",
+			"message": "ResetColour"
+		},
+
+		// Send a message to the cloud, leave the message up to the tag
+		{
+			"name": "sendMessageToCloud",
+			"type": "sendMessage",
+			"target": "Decorations/Background/Cloud2"
+		},
+
+		// Send a resetColour message, leave the target up to the tag
+		{
+			"name": "resetAColour",
+			"type": "sendMessage",
 			"message": "ResetColour"
 		}
 	]

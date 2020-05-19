@@ -138,60 +138,19 @@ namespace CC.DialogueSystem
         {
             // Perform any selected action
             foreach (var actionName in _currentDialogue.Options[index].SelectedActionNames)
-            {
-                // Get the action
-                var action = _currentConversation.Actions.Find(a => a.Name == actionName);
-
-                if (action != null)
-                    performAction(action);
-                else
-                    DialogueLogger.LogError("Cannot find the selectedAction for the option selected. Skipping action");
-            }
+                ActionController.PerformAction(_currentConversation, actionName);
 
             if (_currentDialogue.Options[index].NextId != -1)
                 goToDialogue(_currentDialogue.Options[index].NextId);
         }
 
+        // Called from the UIController, used by the action custom tag
+        public void PerformAction(string actionName) => ActionController.PerformAction(_currentConversation, actionName);
+        public void PerformActionWithMessage(string actionName, string message) => ActionController.PerformActionWithMessage(_currentConversation, actionName, message);
+        public void PerformActionWithTarget(string actionName, string target) => ActionController.PerformActionWithTarget(_currentConversation, actionName, target);
+
+
         #region Helpers
-
-        // Called from the UIController, used by the performAction custom tag
-        public void PerformAction(string actionName)
-        {
-            // Get the action
-            var action = _currentConversation.Actions.Find(a => a.Name == actionName);
-
-            if (action != null)
-                performAction(action);
-            else
-                DialogueLogger.LogError("Cannot find the selectedAction for the option selected. Skipping action");
-        }
-
-        // Performs the supplied action
-        private void performAction(DialogueAction action)
-        {
-            switch (action.ActionType)
-            {
-                case DialogueAction.Types.LOG: DialogueLogger.Log(action.Message); break;
-                case DialogueAction.Types.LOG_WARNING: DialogueLogger.LogWarning(action.Message); break;
-                case DialogueAction.Types.LOG_ERROR: DialogueLogger.LogError(action.Message); break;
-
-                case DialogueAction.Types.CLOSE_CONVERSATION: StopCurrentConversation(); break;
-
-                case DialogueAction.Types.SEND_MESSAGE:
-                    var targetObject = GameObject.Find(action.Target);
-
-                    if (targetObject == null)
-                    {
-                        DialogueLogger.LogError($"Trying to execute a send message action, but GameObject {action.Target} was not found. Skipping action");
-                        return;
-                    }
-                    targetObject.SendMessage(action.Message, SendMessageOptions.DontRequireReceiver);
-                    break;
-                default:
-                    DialogueLogger.LogError($"Action with the name {action.Name} has na unrecognised action type {action.ActionType}. The action type loaded from the conversation JSON is {action.Type}. Skipping action");
-                    break;
-            }
-        }
 
         // Navigates to a dialogue inside the current conversation
         private void goToDialogue(int index)

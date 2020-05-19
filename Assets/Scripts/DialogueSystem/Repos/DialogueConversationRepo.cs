@@ -107,32 +107,15 @@ namespace CC.DialogueSystem
                 if (!action.GetActionType())
                     return false;
 
+                // An action's message and target can be set in real time via the dialogue, so it'll have to be verified in the DialogueController.
+                // Verifiy all of the esential values here
                 switch (action.ActionType)
                 {
                     case DialogueAction.Types.LOG:
                     case DialogueAction.Types.LOG_WARNING:
                     case DialogueAction.Types.LOG_ERROR:
-                        // Check there's a message to log
-                        if (string.IsNullOrEmpty(action.Message) || string.IsNullOrWhiteSpace(action.Message))
-                        {
-                            DialogueLogger.LogError($"An action in file {fileName} is a logging type with an empty message value");
-                            return false;
-                        }
                         break;
                     case DialogueAction.Types.SEND_MESSAGE:
-                        // Check there's a message to send
-                        if (string.IsNullOrEmpty(action.Message) || string.IsNullOrWhiteSpace(action.Message))
-                        {
-                            DialogueLogger.LogError($"An action in file {fileName} is a send message type with an empty message value");
-                            return false;
-                        }
-
-                        // Check there's a target
-                        if (string.IsNullOrEmpty(action.Target) || string.IsNullOrWhiteSpace(action.Target))
-                        {
-                            DialogueLogger.LogError($"An action in file {fileName} is a send message type with an empty target value");
-                            return false;
-                        }
                         break;
                 }
             }

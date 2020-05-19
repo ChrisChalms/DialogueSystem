@@ -103,6 +103,7 @@ public class ExampleDialogueUIController : BaseDialogueUIController
         }
 
         // Check for and apply any mods, then progress through the sentence
+        // TODO: This should probably be moved elsewhere
         for (var i = 0; i < textMods.Sentence.Length; i++)
         {
             // Check for custom modifications
@@ -120,8 +121,14 @@ public class ExampleDialogueUIController : BaseDialogueUIController
                     DialogueVariableRepo.Instance.Remove((mod as SimpleModification).GetValue<string>());
                 else if (mod.ModType == TextModifications.Modifications.WAIT)
                     yield return new WaitForSeconds((mod as SimpleModification).GetValue<float>());
-                else if (mod.ModType == TextModifications.Modifications.PERFORM_ACTION)
+                else if (mod.ModType == TextModifications.Modifications.ACTION)
                     DialogueController.Instance.PerformAction((mod as SimpleModification).GetValue<string>());
+                else if (mod.ModType == TextModifications.Modifications.LOG)
+                    DialogueLogger.Log((mod as SimpleModification).GetValue<string>());
+                else if (mod.ModType == TextModifications.Modifications.LOG_WARNING)
+                    DialogueLogger.LogWarning((mod as SimpleModification).GetValue<string>());
+                else if (mod.ModType == TextModifications.Modifications.LOG_ERROR)
+                    DialogueLogger.LogError((mod as SimpleModification).GetValue<string>());
 
                 // Complex modifications e.g. <command=value>content</command>
                 else if (mod.ModType == TextModifications.Modifications.SEND_MESSAGE)
@@ -137,6 +144,10 @@ public class ExampleDialogueUIController : BaseDialogueUIController
                 }
                 else if (mod.ModType == TextModifications.Modifications.CHANGE_SPRITE)
                     _spriteBox.ChangeSprite(DialogueSpriteRepo.Instance.RetrieveSprites((mod as SimpleModification).GetValue<string>(), (mod as ComplexModification).GetContent<string>()));
+                else if (mod.ModType == TextModifications.Modifications.ACTION_WITH_MESSAGE)
+                    DialogueController.Instance.PerformActionWithMessage((mod as SimpleModification).GetValue<string>(), (mod as ComplexModification).GetContent<string>());
+                else if (mod.ModType == TextModifications.Modifications.ACTION_WITH_TARGET)
+                    DialogueController.Instance.PerformActionWithTarget((mod as SimpleModification).GetValue<string>(), (mod as ComplexModification).GetContent<string>());
             }
 
             _dialogueBox.IncrementVisibleCharacters();

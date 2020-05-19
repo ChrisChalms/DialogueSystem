@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 
 namespace CC.DialogueSystem
 {
@@ -18,11 +19,16 @@ namespace CC.DialogueSystem
             SPEED,
             REMOVE_VARAIBLE,
             WAIT,
-            PERFORM_ACTION,
+            ACTION,
+            LOG,
+            LOG_WARNING,
+            LOG_ERROR,
 
             // Complex
             SEND_MESSAGE,
             CHANGE_SPRITE,
+            ACTION_WITH_MESSAGE,
+            ACTION_WITH_TARGET,
 
             RETRIEVE_VARIABLE_SHORT,
             RETRIEVE_VARIABLE_INT,
@@ -231,21 +237,16 @@ namespace CC.DialogueSystem
             if (command.Contains("hidesprite"))
                 return Modifications.HIDE_SPRITE;
 
-            // Simple
-            else if (command.Contains("speed"))
-                return Modifications.SPEED;
-            else if (command.Contains("removevariable"))
-                return Modifications.REMOVE_VARAIBLE;
-            else if (command.Contains("wait"))
-                return Modifications.WAIT;
-            else if (command.Contains("performaction"))
-                return Modifications.PERFORM_ACTION;
-
             // Complex
+            // Must be checked before simple because of the action tag
             else if (command.Contains("sendmessage"))
                 return Modifications.SEND_MESSAGE;
             else if (command.Contains("changesprite"))
                 return Modifications.CHANGE_SPRITE;
+            else if (command.Contains("actionwithmessage"))
+                return Modifications.ACTION_WITH_MESSAGE;
+            else if (command.Contains("actionwithtarget"))
+                return Modifications.ACTION_WITH_TARGET;
 
             // Retrieval
             else if (command.Contains("retrieveshort"))
@@ -274,6 +275,22 @@ namespace CC.DialogueSystem
                 return Modifications.REGISTER_BOOL;
             else if (command.Contains("registerstring"))
                 return Modifications.REGISTER_STRING;
+
+            // Simple
+            else if (command.Contains("speed"))
+                return Modifications.SPEED;
+            else if (command.Contains("removevariable"))
+                return Modifications.REMOVE_VARAIBLE;
+            else if (command.Contains("wait"))
+                return Modifications.WAIT;
+            else if (command.Contains("action"))
+                return Modifications.ACTION;
+            else if (command.Contains("logerror"))
+                return Modifications.LOG_ERROR;
+            else if (command.Contains("logwarning"))
+                return Modifications.LOG_WARNING;
+            else if (command.Contains("log"))
+                return Modifications.LOG;
 
             return Modifications.NOT_CUSTOM;
         }
@@ -306,6 +323,8 @@ namespace CC.DialogueSystem
         {
             return (mod == Modifications.SEND_MESSAGE ||
                 mod == Modifications.CHANGE_SPRITE ||
+                mod == Modifications.ACTION_WITH_MESSAGE ||
+                mod == Modifications.ACTION_WITH_TARGET ||
                 mod == Modifications.REGISTER_SHORT ||
                 mod == Modifications.REGISTER_INT ||
                 mod == Modifications.REGISTER_LONG ||
@@ -332,7 +351,12 @@ namespace CC.DialogueSystem
             if (modType == Modifications.SEND_MESSAGE ||
                 modType == Modifications.REMOVE_VARAIBLE ||
                 modType == Modifications.CHANGE_SPRITE ||
-                modType == Modifications.PERFORM_ACTION)
+                modType == Modifications.ACTION ||
+                modType == Modifications.ACTION_WITH_MESSAGE ||
+                modType == Modifications.ACTION_WITH_TARGET ||
+                modType == Modifications.LOG ||
+                modType == Modifications.LOG_WARNING ||
+                modType == Modifications.LOG_ERROR)
                 return commandText;
 
             // Parse float
