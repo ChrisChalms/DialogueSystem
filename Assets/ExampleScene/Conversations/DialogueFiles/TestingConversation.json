@@ -4,9 +4,9 @@
     	// Conversation
 		{
 			"id": 1,
-			//"nextId": 2,
 			"characterSpritesName": "TestCharacter",
 			"startingSprite": "Default",
+			"theme": "Default",
 			"sentences":
             [
             	"I'm not part of this game, I'm just here to test some features.",
@@ -36,21 +36,34 @@
 			"startingSprite": "Default",
 			"sentences":
 			[
+				// Logging
 				"I can even perform those actions at any point during the dialogue, I'll perform all of the logging actions again<speed=3>...<performAction=logNormal><performAction=logAWarning><performAction=logAnError>.",
 				"I can even pass messages or targets to those actions<actionWithMessage=logNormal>Unique message</actionWithMessage>!",
 				"Or just log using the custom tags<log=A normal log message><logWarning=A warning!><logError=An error log!>.",
+
+				// Themes
+				"I can change the theme with a simple tag<changeTheme=Dark>.",
+				"Or I can change it back using an action<action=defaultTheme>.<wait=1> Or change <actionWithMessage=changeToATheme>Dark</actionWithMessage>it by passing the theme to the action from the dialogue<actionWithMessage=changeToATheme>Default</actionWithMessage>!",
+
+				// Messages
 				"I can send messages to external objects<sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>, to say<sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>, change the <sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>colour <sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>of a <sendMessage=Decorations/Background/Cloud2>ChangeColour</sendMessage>cloud<sendMessage=Decorations/Background/Cloud2>ResetColour</sendMessage>.",
-				"I can <action=changeCloudColour>do the <action=resetCloudColoud>same thing<actionWithMessage=sendMessageToCloud>changeColour</actionWithMessage> but using <actionWithTarget=resetAColour>Decorations/Background/Cloud2</actionWithTarget>actions<action=changeCloudColour>. Some of those of those actions<action=resetCloudColoud> used passed messages and targets for more control.",
+				"I can <action=changeCloudColour>do the same thing <actionWithTarget=resetAColour>Decorations/Background/Cloud2</actionWithTarget>but using <actionWithMessage=sendMessageToCloud>ChangeColour</actionWithMessage>actions. Some <action=resetCloudColoud>of those<action=changeCloudColour> actions used passed messages and<action=resetCloudColoud> targets for more control.",
+
+				// Sprites
 				"You see my sprite? I can change that in at any point during the conversation, like this<speed=3>...<changeSprite=TestCharacter>NoHat</changeSprite><speed=1> See, no hat!",
 				"I can even get rid of it completely<hideSprite>.<wait=1.5> Or change it again and bring it back<changeSprite=TestCharacter>Default</changeSprite>.",
-				"My conversation was loaded when you walked over my trigger, using the handy event handler.",
+
+				// Variables
 				"I can remember number shorts<registerShort=testShort>1</registerShort>, ints<registerInt=testInt>2</registerInt>, longs<registerLong=testLong>3</registerLong>, floats<registerFloat=testFloat>4</registerFloat>, bools<registerBool=testBool>true</registerBool>, and strings<registerString=testString>Five</registerString>.",
 				"I can then recall them: shorts(<retrieveShort=testShort>), ints(<retrieveInt=testInt>), longs(<retrieveLong=testLong>), floats(<retrieveFloat=testFloat>), bools(<retrieveBool=testBool>), and strings(<retrieveString=testString>).",
 				"Or forget a variable I remembered<removeVariable=testBool>.",
+
+				// Misc
 				"I can wait for 1 <wait=1>second, 2<wait=2> seconds, or any really",
 				"<speed=0.1>I can go fast............",
 				"<speed=3>Or slow...",				
 				"There's even a handy logger that let's you know what's going with different log levels if you just want to see warnings or errors.",
+				"My conversation was loaded when you walked over my trigger, using the handy event handler.",
 				"All without any code! If you want to see the rest of the example game, go talk to the Wise Wizard"
 			]
 		}
@@ -114,6 +127,19 @@
 			"name": "resetAColour",
 			"type": "sendMessage",
 			"message": "ResetColour"
+		},
+
+		// Change theme action
+		{
+			"name": "defaultTheme",
+			"type": "changeTheme",
+			"message": "Default"
+		},
+
+		// Change the theme
+		{
+			"name": "changeToATheme",
+			"type": "changeTheme",
 		}
 	]
 }

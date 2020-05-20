@@ -38,16 +38,16 @@ public class CoinCounter : MonoBehaviour
     // Retrieve, increment, then put back
     private void addCoins(int amount)
     {
-        var coinAmount = DialogueVariableRepo.Instance.Retrieve<int>("playerGold");
+        var coinAmount = VariableRepo.Instance.Retrieve<int>("playerGold");
         coinAmount += amount;
         _amountText.text = $"x {coinAmount}";
-        DialogueVariableRepo.Instance.Register("playerGold", coinAmount);
+        VariableRepo.Instance.Register("playerGold", coinAmount);
     }
 
     // Reset the coins
     public void ResetCoins()
     {
         _amountText.text = "x 0";
-        DialogueVariableRepo.Instance.Register("playerGold", 0);
+        VariableRepo.Instance.Register("playerGold", 0);
     }
 }

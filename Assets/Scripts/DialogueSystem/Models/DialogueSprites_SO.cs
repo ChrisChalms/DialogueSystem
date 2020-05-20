@@ -4,9 +4,10 @@ using UnityEngine;
 
 namespace CC.DialogueSystem
 {
-    [CreateAssetMenu(fileName = "Character Sprites", menuName = "DialogueSystem/Character Sprites")]
+    [CreateAssetMenu(fileName = "Character Sprites", menuName = "DialogueSystem/Character Sprites", order = 2)]
     public class DialogueSprites_SO : ScriptableObject
     {
+        public string CharactersName;
         public List<DialogueCharacterSprite> CharacterSprites;
     }
 

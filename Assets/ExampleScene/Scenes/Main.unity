@@ -646,7 +646,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spritesObject: {fileID: 11400000, guid: d7732e27561e6e34eacc498ca6dfa1d8, type: 2}
-  _name: TestCharacter
   _registerOnStart: 1
 --- !u!1 &265439251
 GameObject:
@@ -1021,9 +1020,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 328772068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78d6fd851cd32db499509e3db97b6075, type: 3}
+  m_Script: {fileID: 11500000, guid: 7abe33df0f4b9b444a81e8b47edce745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _themesToLoad:
+  - {fileID: 11400000, guid: 56565ca3437fd4b478bb443d854c952c, type: 2}
+  - {fileID: 11400000, guid: 28204fad0637d9243bd6a78dc0523986, type: 2}
 --- !u!1 &377956513
 GameObject:
   m_ObjectHideFlags: 0
@@ -1036,6 +1038,7 @@ GameObject:
   - component: {fileID: 377956516}
   - component: {fileID: 377956515}
   - component: {fileID: 377956517}
+  - component: {fileID: 377956518}
   m_Layer: 5
   m_Name: NextArrow
   m_TagString: Untagged
@@ -1110,6 +1113,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c3b7a1cef03ae7419bcb45da58c60b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &377956518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377956513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54a25107d40d1e42a378795a2038e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _elementsName: Arrow
 --- !u!1 &396467507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,6 +1233,7 @@ GameObject:
   - component: {fileID: 428394535}
   - component: {fileID: 428394534}
   - component: {fileID: 428394537}
+  - component: {fileID: 428394538}
   m_Layer: 5
   m_Name: DialogueUI
   m_TagString: Untagged
@@ -1310,6 +1327,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24ec61629a8109c409c0db2acf575593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &428394538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428394532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54a25107d40d1e42a378795a2038e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _elementsName: DialogueBox
 --- !u!1 &506184351
 GameObject:
   m_ObjectHideFlags: 0
@@ -1677,9 +1707,10 @@ GameObject:
   - component: {fileID: 655406429}
   - component: {fileID: 655406428}
   - component: {fileID: 655406427}
-  - component: {fileID: 655406431}
   - component: {fileID: 655406432}
   - component: {fileID: 655406426}
+  - component: {fileID: 655406431}
+  - component: {fileID: 655406433}
   m_Layer: 5
   m_Name: 0
   m_TagString: Untagged
@@ -1868,6 +1899,21 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &655406433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655406424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c241fc0cab4c6cb4a9bd9c53e831d066, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _elementsName: OptionBox
+  _buttonElementName: OptionBoxPressed
+  _buttonStateToChange: 1
 --- !u!1 &700541946
 GameObject:
   m_ObjectHideFlags: 0
@@ -2435,9 +2481,10 @@ GameObject:
   - component: {fileID: 907510586}
   - component: {fileID: 907510585}
   - component: {fileID: 907510584}
-  - component: {fileID: 907510588}
   - component: {fileID: 907510589}
   - component: {fileID: 907510590}
+  - component: {fileID: 907510588}
+  - component: {fileID: 907510591}
   m_Layer: 5
   m_Name: 2
   m_TagString: Untagged
@@ -2626,6 +2673,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &907510591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907510582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c241fc0cab4c6cb4a9bd9c53e831d066, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _elementsName: OptionBox
+  _buttonElementName: OptionBoxPressed
+  _buttonStateToChange: 1
 --- !u!1001 &969680493
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3123,7 +3185,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spritesObject: {fileID: 11400000, guid: 589b9e6c3b76bac4a968afa49e8149f5, type: 2}
-  _name: Wizard
   _registerOnStart: 1
 --- !u!1 &1168703162
 GameObject:
@@ -3184,9 +3245,10 @@ GameObject:
   - component: {fileID: 1225118413}
   - component: {fileID: 1225118412}
   - component: {fileID: 1225118411}
-  - component: {fileID: 1225118415}
   - component: {fileID: 1225118416}
   - component: {fileID: 1225118417}
+  - component: {fileID: 1225118415}
+  - component: {fileID: 1225118418}
   m_Layer: 5
   m_Name: 1
   m_TagString: Untagged
@@ -3375,6 +3437,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1225118418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225118409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c241fc0cab4c6cb4a9bd9c53e831d066, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _elementsName: OptionBox
+  _buttonElementName: OptionBoxPressed
+  _buttonStateToChange: 1
 --- !u!1 &1231762266
 GameObject:
   m_ObjectHideFlags: 0
@@ -3532,6 +3609,7 @@ GameObject:
   - component: {fileID: 1374647389}
   - component: {fileID: 1374647388}
   - component: {fileID: 1374647390}
+  - component: {fileID: 1374647391}
   m_Layer: 5
   m_Name: NameBox
   m_TagString: Untagged
@@ -3646,6 +3724,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a8b020a48f715f4d9c8766caeab0cc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1374647391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374647384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54a25107d40d1e42a378795a2038e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _elementsName: NameBox
 --- !u!1 &1418741526
 GameObject:
   m_ObjectHideFlags: 0
@@ -4031,7 +4122,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _spritesObject: {fileID: 11400000, guid: 6774727feb4def04281cc9d71e368543, type: 2}
-  _name: HatMerchant
   _registerOnStart: 1
 --- !u!1 &1569458387
 GameObject:
@@ -4728,7 +4818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 816141183c19efd4d82ae1592ae451dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 8
+  _movementSpeed: 6
   _airMovementSpeed: 5
   _movementSlowdownMultiplier: 0.8
   _jumpForce: 5
@@ -5409,7 +5499,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: v0.68
+  m_Text: v0.7
 --- !u!222 &2085627715
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5429,6 +5519,7 @@ GameObject:
   - component: {fileID: 2097060784}
   - component: {fileID: 2097060786}
   - component: {fileID: 2097060785}
+  - component: {fileID: 2097060787}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -5491,6 +5582,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2097060783}
   m_CullTransparentMesh: 0
+--- !u!114 &2097060787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097060783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54a25107d40d1e42a378795a2038e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _elementsName: CharacterSprite
 --- !u!1 &2112495796
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CC.DialogueSystem
 {
@@ -68,6 +67,11 @@ namespace CC.DialogueSystem
                     }
                     targetObject.SendMessage(action.Message, SendMessageOptions.DontRequireReceiver);
                     break;
+
+                case DialogueAction.Types.CHANGE_THEME:
+                    DialogueController.Instance.ChangeTheme(action.Message);
+                    break;
+
                 default:
                     DialogueLogger.LogError($"Action with the name {action.Name} has na unrecognised action type {action.ActionType}. The action type loaded from the conversation JSON is {action.Type}. Skipping action");
                     break;
@@ -101,6 +105,15 @@ namespace CC.DialogueSystem
                     if (string.IsNullOrEmpty(action.Target) || string.IsNullOrWhiteSpace(action.Target))
                     {
                         DialogueLogger.LogError($"An action with the name {action.Name} is trying to send a message with an empty target value");
+                        return false;
+                    }
+                    break;
+
+                case DialogueAction.Types.CHANGE_THEME:
+                    // All we need's a message
+                    if (string.IsNullOrEmpty(action.Message) || string.IsNullOrWhiteSpace(action.Message))
+                    {
+                        DialogueLogger.LogError($"An action with the name {action.Name} is trying to change the theme with an empty message value");
                         return false;
                     }
                     break;

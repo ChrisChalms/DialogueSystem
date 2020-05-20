@@ -23,6 +23,7 @@ namespace CC.DialogueSystem
             LOG,
             LOG_WARNING,
             LOG_ERROR,
+            CHANGE_THEME,
 
             // Complex
             SEND_MESSAGE,
@@ -130,7 +131,7 @@ namespace CC.DialogueSystem
                             {
                                 parsingComplexTag = false;
                                 if (isRegistrationTag(tempType))
-                                    DialogueVariableRepo.Instance.Register(complexTagValue, complexTagContent, getRegistrationTypeCode(tempType));
+                                    VariableRepo.Instance.Register(complexTagValue, complexTagContent, getRegistrationTypeCode(tempType));
                                 else
                                     registerComplexModification(tempType, complexTagValue, complexTagContent, commandStarted);
                             }
@@ -206,22 +207,22 @@ namespace CC.DialogueSystem
             var variableName = variableSplits[1];
             // Retrieve short var
             if (modType == Modifications.RETRIEVE_VARIABLE_SHORT)
-                return DialogueVariableRepo.Instance.Retrieve<short>(variableName);
+                return VariableRepo.Instance.Retrieve<short>(variableName);
             // Retrieve int var
             else if (modType == Modifications.RETRIEVE_VARIABLE_INT)
-                return DialogueVariableRepo.Instance.Retrieve<int>(variableName);
+                return VariableRepo.Instance.Retrieve<int>(variableName);
             // Retrieve long var
             else if (modType == Modifications.RETRIEVE_VARIABLE_LONG)
-                return DialogueVariableRepo.Instance.Retrieve<long>(variableName);
+                return VariableRepo.Instance.Retrieve<long>(variableName);
             // Retrieve float var
             else if (modType == Modifications.RETRIEVE_VARIABLE_FLOAT)
-                return DialogueVariableRepo.Instance.Retrieve<float>(variableName);
+                return VariableRepo.Instance.Retrieve<float>(variableName);
             // Retrieve bool var
             else if (modType == Modifications.RETRIEVE_VARIABLE_BOOL)
-                return DialogueVariableRepo.Instance.Retrieve<bool>(variableName);
+                return VariableRepo.Instance.Retrieve<bool>(variableName);
             // Retrieve string var
             else if (modType == Modifications.RETRIEVE_VARIABLE_STRING)
-                return DialogueVariableRepo.Instance.Retrieve<string>(variableName);
+                return VariableRepo.Instance.Retrieve<string>(variableName);
 
             return string.Empty;
         }
@@ -291,7 +292,9 @@ namespace CC.DialogueSystem
                 return Modifications.LOG_WARNING;
             else if (command.Contains("log"))
                 return Modifications.LOG;
-
+            else if (command.Contains("changetheme"))
+                return Modifications.CHANGE_THEME;
+                
             return Modifications.NOT_CUSTOM;
         }
 
@@ -356,7 +359,8 @@ namespace CC.DialogueSystem
                 modType == Modifications.ACTION_WITH_TARGET ||
                 modType == Modifications.LOG ||
                 modType == Modifications.LOG_WARNING ||
-                modType == Modifications.LOG_ERROR)
+                modType == Modifications.LOG_ERROR ||
+                modType == Modifications.CHANGE_THEME)
                 return commandText;
 
             // Parse float

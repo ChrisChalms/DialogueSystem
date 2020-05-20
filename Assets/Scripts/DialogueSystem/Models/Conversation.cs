@@ -26,6 +26,7 @@ namespace CC.DialogueSystem
         public string SpeakersName;
         public string CharacterSpritesName;
         public string StartingSprite;
+        public string Theme;
         public bool AutoProceed;
         public bool CanBeUsedAsStartingPoint = true;
 
@@ -74,7 +75,8 @@ namespace CC.DialogueSystem
             LOG_WARNING,
             LOG_ERROR,
             CLOSE_CONVERSATION,
-            SEND_MESSAGE
+            SEND_MESSAGE,
+            CHANGE_THEME
         }
 
         public string Name;
@@ -111,6 +113,10 @@ namespace CC.DialogueSystem
                 case "send_message":
                 case "send message":
                 case "sendmessage": ActionType = Types.SEND_MESSAGE; break;
+
+                case "change_theme":
+                case "change theme":
+                case "changetheme": ActionType = Types.CHANGE_THEME; break;
 
                 default:
                     DialogueLogger.LogError($"Unsupported action type {Type} found in action with the name {Name}.");
@@ -201,7 +207,7 @@ namespace CC.DialogueSystem
         public T GetValue<T>()
         {
             if (FromRepo)
-                return DialogueVariableRepo.Instance.Retrieve<T>(Name);
+                return VariableRepo.Instance.Retrieve<T>(Name);
 
             if (_castValue == null)
                 DialogueLogger.LogError("Trying to retrieve a variable value for comparison that is null");
@@ -213,7 +219,7 @@ namespace CC.DialogueSystem
         public object GetValue()
         {
             if (FromRepo)
-                return DialogueVariableRepo.Instance.Retrieve(Name);
+                return VariableRepo.Instance.Retrieve(Name);
 
             if (_castValue == null)
                 DialogueLogger.LogError("Trying to retrieve a variable value for comparison that is null");

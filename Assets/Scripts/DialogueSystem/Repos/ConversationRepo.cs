@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CC.DialogueSystem
 {
     // Parses and stores all the conversations for this scene. 
-    public class DialogueConversationRepo : MonoBehaviour
+    public class ConversationRepo : MonoBehaviour
     {
 
         [SerializeField]
@@ -15,7 +15,7 @@ namespace CC.DialogueSystem
         private Dictionary<string, Conversation> _conversations;
         private IDeserializer _deserializer;
 
-        public static DialogueConversationRepo Instance { get; private set; }
+        public static ConversationRepo Instance { get; private set; }
 
         #region MonoBehaviour
 
@@ -25,7 +25,8 @@ namespace CC.DialogueSystem
             if (Instance == null)
                 Instance = this;
 
-            new DialogueVariableRepo();
+            new VariableRepo();
+            new SpriteRepo();
 
             // Initialize early so it's ready for use in Start()
             _conversations = new Dictionary<string, Conversation>();
@@ -108,15 +109,15 @@ namespace CC.DialogueSystem
                     return false;
 
                 // An action's message and target can be set in real time via the dialogue, so it'll have to be verified in the DialogueController.
-                // Verifiy all of the esential values here
+                // Verifiy all of the essential values here
                 switch (action.ActionType)
                 {
                     case DialogueAction.Types.LOG:
                     case DialogueAction.Types.LOG_WARNING:
                     case DialogueAction.Types.LOG_ERROR:
                         break;
-                    case DialogueAction.Types.SEND_MESSAGE:
-                        break;
+                    case DialogueAction.Types.SEND_MESSAGE: break;
+                    case DialogueAction.Types.CHANGE_THEME: break;
                 }
             }
 

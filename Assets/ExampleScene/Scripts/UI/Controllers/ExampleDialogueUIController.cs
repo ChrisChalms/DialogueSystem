@@ -23,7 +23,6 @@ public class ExampleDialogueUIController : BaseDialogueUIController
     private bool _isShowing;
     private bool _isAnimatingText;
     private float _currentTimeBetweenChars;
-    private float _speedMultiplyer;
     private bool _handledInput;
 
     #region MonoBehaviour
@@ -40,10 +39,10 @@ public class ExampleDialogueUIController : BaseDialogueUIController
 
         _currentTimeBetweenChars = _defaultTimeBetweenChars;
 
-        // Actions example
-        DialogueVariableRepo.Instance.VariableRegistered += (key) => DialogueLogger.Log($"The variable {key} was added");
-        DialogueVariableRepo.Instance.VariableUpdated += (key) => DialogueLogger.Log($"The variable {key} was updated");
-        DialogueVariableRepo.Instance.VariableRemoved += (key) => DialogueLogger.Log($"The variable {key} was removed");
+        // Actions examples
+        VariableRepo.Instance.VariableRegistered += (key) => DialogueLogger.Log($"The variable {key} was added");
+        VariableRepo.Instance.VariableUpdated += (key) => DialogueLogger.Log($"The variable {key} was updated");
+        VariableRepo.Instance.VariableRemoved += (key) => DialogueLogger.Log($"The variable {key} was removed");
     }
 
     // Handle the UI Input
@@ -82,14 +81,13 @@ public class ExampleDialogueUIController : BaseDialogueUIController
     #endregion
 
     // Animate the sentence text and handle the custom tags
-    public override IEnumerator ShowSentence(string speakersName, TextModifications textMods, Sprite characterSprite, bool sameSpeakerAsLastDialogue = true, bool autoProceed = false)
+    public override IEnumerator ShowSentence(string speaker, Sprite characterSprite, bool sameSpeakerAsLastDialogue = true, bool autoProceed = false)
     {
         _isAnimatingText = true;
-        _speedMultiplyer = 1;
         _nextArrow.Hide();
         _dialogueBox.Show(false);
-        _dialogueBox.SetSentence(textMods.Sentence);
-        _nameBox.SetName(speakersName);
+        _dialogueBox.SetSentence(_currentTextMod?.Sentence);
+        _nameBox.SetName(speaker);
         _optionButtons.HideOptions();
         if (!sameSpeakerAsLastDialogue)
             _spriteBox.ChangeSprite(characterSprite);
@@ -104,51 +102,9 @@ public class ExampleDialogueUIController : BaseDialogueUIController
 
         // Check for and apply any mods, then progress through the sentence
         // TODO: This should probably be moved elsewhere
-        for (var i = 0; i < textMods.Sentence.Length; i++)
+        for (var i = 0; i < _currentTextMod?.Sentence.Length; i++)
         {
-            // Check for custom modifications
-            var mods = textMods.GetAnyTextModsForPosition(i);
-            foreach (var mod in mods)
-            {
-                // Commands
-                if (mod.ModType == TextModifications.Modifications.HIDE_SPRITE)
-                    _spriteBox.ChangeSprite(null);
-
-                // Simple modifications e.g. <command=value>
-                else if (mod.ModType == TextModifications.Modifications.SPEED)
-                    _speedMultiplyer = (mod as SimpleModification).GetValue<float>();
-                else if (mod.ModType == TextModifications.Modifications.REMOVE_VARAIBLE)
-                    DialogueVariableRepo.Instance.Remove((mod as SimpleModification).GetValue<string>());
-                else if (mod.ModType == TextModifications.Modifications.WAIT)
-                    yield return new WaitForSeconds((mod as SimpleModification).GetValue<float>());
-                else if (mod.ModType == TextModifications.Modifications.ACTION)
-                    DialogueController.Instance.PerformAction((mod as SimpleModification).GetValue<string>());
-                else if (mod.ModType == TextModifications.Modifications.LOG)
-                    DialogueLogger.Log((mod as SimpleModification).GetValue<string>());
-                else if (mod.ModType == TextModifications.Modifications.LOG_WARNING)
-                    DialogueLogger.LogWarning((mod as SimpleModification).GetValue<string>());
-                else if (mod.ModType == TextModifications.Modifications.LOG_ERROR)
-                    DialogueLogger.LogError((mod as SimpleModification).GetValue<string>());
-
-                // Complex modifications e.g. <command=value>content</command>
-                else if (mod.ModType == TextModifications.Modifications.SEND_MESSAGE)
-                {
-                    var revievingObject = GameObject.Find((mod as SimpleModification).GetValue<string>());
-                    if (revievingObject == null)
-                    {
-                        DialogueLogger.LogError($"Trying to execute a send message command, but GameObject {(mod as SimpleModification).GetValue<string>()} was not found");
-                        continue;
-                    }
-
-                    revievingObject.SendMessage((mod as ComplexModification).GetContent<string>(), SendMessageOptions.DontRequireReceiver);
-                }
-                else if (mod.ModType == TextModifications.Modifications.CHANGE_SPRITE)
-                    _spriteBox.ChangeSprite(DialogueSpriteRepo.Instance.RetrieveSprites((mod as SimpleModification).GetValue<string>(), (mod as ComplexModification).GetContent<string>()));
-                else if (mod.ModType == TextModifications.Modifications.ACTION_WITH_MESSAGE)
-                    DialogueController.Instance.PerformActionWithMessage((mod as SimpleModification).GetValue<string>(), (mod as ComplexModification).GetContent<string>());
-                else if (mod.ModType == TextModifications.Modifications.ACTION_WITH_TARGET)
-                    DialogueController.Instance.PerformActionWithTarget((mod as SimpleModification).GetValue<string>(), (mod as ComplexModification).GetContent<string>());
-            }
+            yield return StartCoroutine(processTagsForPosition(i));
 
             _dialogueBox.IncrementVisibleCharacters();
             yield return new WaitForSeconds(_currentTimeBetweenChars * _speedMultiplyer);
@@ -162,6 +118,12 @@ public class ExampleDialogueUIController : BaseDialogueUIController
             _nextArrow.Show();
     }
 
+    // Change the character's sprite 
+    protected override void changeCharacterSprite(Sprite newSprite) => _spriteBox.ChangeSprite(newSprite);
+
+    // Hide the character's sprite box
+    protected override void hideCharacterSprite() => _spriteBox.ChangeSprite(null);
+
     // Show the options
     public override void ShowOptions(List<Option> options)
     {
@@ -170,10 +132,7 @@ public class ExampleDialogueUIController : BaseDialogueUIController
     }
 
     // An option was selected
-    public override void OptionButtonClicked(int index)
-    {
-        DialogueController.Instance.OptionSelected(index);
-    }
+    public override void OptionButtonClicked(int index) => DialogueController.Instance.OptionSelected(index);
 
     // Close the UI
     public override void Close()

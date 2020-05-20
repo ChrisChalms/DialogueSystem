@@ -41,7 +41,7 @@ namespace CC.DialogueSystem
                 return;
             }
 
-            DialogueConversationRepo.Instance.RegisterConversation(_name, _file);
+            ConversationRepo.Instance.RegisterConversation(_name, _file);
         }
     }
 }

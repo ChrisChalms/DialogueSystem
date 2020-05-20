@@ -11,6 +11,7 @@ namespace CC.DialogueSystem
         // Actions
         public event Action ConversationStarted;
         public event Action ConversationEnded;
+        public event Action<string> ThemeChanged;
 
         [SerializeField]
         private DialogueLogger.LogLevel _logLevel;
@@ -23,6 +24,7 @@ namespace CC.DialogueSystem
         private bool _inConversation;
         private int _currentSentence;
         private string _lastSpeaker;
+        private string _currentTheme;
 
         public static DialogueController Instance { get; private set; }
 
@@ -35,6 +37,14 @@ namespace CC.DialogueSystem
                 Instance = this;
 
             DialogueLogger.CurrentLogLevel = (int)_logLevel;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+                ChangeTheme("Dark");
+            else  if (Input.GetKeyDown(KeyCode.Alpha2))
+                ChangeTheme("Default");
         }
 
         #endregion
@@ -55,7 +65,7 @@ namespace CC.DialogueSystem
             }
 
             // Check if repo exists and the conversation has been loaded
-            var tempoConvo = DialogueConversationRepo.Instance?.RetrieveConversation(convoName);
+            var tempoConvo = ConversationRepo.Instance?.RetrieveConversation(convoName);
             if (tempoConvo == null)
             {
                 DialogueLogger.LogError($"Tried to start conversation {convoName} but it doesn't exist is the ConversationRepo");
@@ -90,10 +100,13 @@ namespace CC.DialogueSystem
             _inConversation = true;
             _currentConversation = tempoConvo;
 
-            StartCoroutine(_uiController.ShowSentence(_currentDialogue.SpeakersName,
+            if (needToChangeTheme())
+                ChangeTheme(_currentDialogue.Theme);
+
+            _uiController.PrepareToShowSentence(_currentDialogue.SpeakersName,
                 parseSentenceForCustomTags(_currentDialogue.Sentences[_currentSentence]),
-                DialogueSpriteRepo.Instance.RetrieveSprites(_currentDialogue.CharacterSpritesName, string.IsNullOrEmpty(_currentDialogue.StartingSprite) ? "Default" : _currentDialogue.StartingSprite),
-                _currentDialogue.AutoProceed));
+                SpriteRepo.Instance.RetrieveSprite(_currentDialogue.CharacterSpritesName, string.IsNullOrEmpty(_currentDialogue.StartingSprite) ? "Default" : _currentDialogue.StartingSprite),
+                _currentDialogue.AutoProceed);
             ConversationStarted?.Invoke();
         }
 
@@ -122,14 +135,18 @@ namespace CC.DialogueSystem
                 // There's more sentences to show
                 _currentSentence++;
 
+                // Last speaker
                 var sameSpeaker = _lastSpeaker == _currentDialogue.SpeakersName;
                 _lastSpeaker = _currentDialogue.SpeakersName;
 
-                StartCoroutine(_uiController.ShowSentence(_currentDialogue.SpeakersName,
+                if (needToChangeTheme())
+                    ChangeTheme(_currentDialogue.Theme);
+
+                _uiController.PrepareToShowSentence(_currentDialogue.SpeakersName,
                     parseSentenceForCustomTags(_currentDialogue.Sentences[_currentSentence]),
-                    (!sameSpeaker) ? DialogueSpriteRepo.Instance.RetrieveSprites(_currentDialogue.CharacterSpritesName, string.IsNullOrEmpty(_currentDialogue.StartingSprite) ? "Default" : _currentDialogue.StartingSprite) : null, //null, // After the conversation has started the sprite should be changed using the changeSprite tag
+                    (!sameSpeaker) ? SpriteRepo.Instance.RetrieveSprite(_currentDialogue.CharacterSpritesName, string.IsNullOrEmpty(_currentDialogue.StartingSprite) ? "Default" : _currentDialogue.StartingSprite) : null, //null, // After the conversation has started the sprite should be changed using the changeSprite tag
                     sameSpeaker,
-                    _currentDialogue.AutoProceed));
+                    _currentDialogue.AutoProceed);
             }
         }
 
@@ -151,6 +168,12 @@ namespace CC.DialogueSystem
 
 
         #region Helpers
+
+        // Do we need to change theme?
+        private bool needToChangeTheme() => string.IsNullOrEmpty(_currentDialogue.Theme) ? false : _currentTheme != _currentDialogue.Theme;
+
+        // Invoke the action when the theme's changed
+        public void ChangeTheme(string name) => ThemeChanged?.Invoke(name);
 
         // Navigates to a dialogue inside the current conversation
         private void goToDialogue(int index)

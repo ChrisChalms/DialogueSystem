@@ -107,11 +107,11 @@ public class PlayerController : MonoBehaviour
         if (_collision.IsGrounded)
         {
             _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
-            if(DialogueVariableRepo.Instance.Retrieve<bool>("trackingJumps"))
+            if(VariableRepo.Instance.Retrieve<bool>("trackingJumps"))
             {
-                var tempJumps = DialogueVariableRepo.Instance.Retrieve<int>("playerJumps");
+                var tempJumps = VariableRepo.Instance.Retrieve<int>("playerJumps");
                 tempJumps++;
-                DialogueVariableRepo.Instance.Register<int>("playerJumps", tempJumps);
+                VariableRepo.Instance.Register<int>("playerJumps", tempJumps);
             }
         }
     }

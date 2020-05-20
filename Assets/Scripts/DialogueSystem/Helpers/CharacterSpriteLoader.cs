@@ -9,8 +9,6 @@ namespace CC.DialogueSystem
         [SerializeField]
         private DialogueSprites_SO _spritesObject;
         [SerializeField]
-        private string _name;
-        [SerializeField]
         private bool _registerOnStart;
 
         #region MonoBehaviour
@@ -28,7 +26,7 @@ namespace CC.DialogueSystem
         public void LoadSprites()
         {
             // Can't load if there's no name
-            if (string.IsNullOrEmpty(_name))
+            if (string.IsNullOrEmpty(_spritesObject.CharactersName))
             {
                 DialogueLogger.LogError($"Object {gameObject.name} cannot register character sprites without a name");
                 return;
@@ -41,7 +39,7 @@ namespace CC.DialogueSystem
                 return;
             }
 
-            DialogueSpriteRepo.Instance.RegisterCharacterSprites(_name, _spritesObject);
+            SpriteRepo.Instance.RegisterCharacterSprites(_spritesObject);
         }
     }
 }

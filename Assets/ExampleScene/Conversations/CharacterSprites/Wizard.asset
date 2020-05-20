@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb45fe1985b74d4b8a93681d46cd30d, type: 3}
   m_Name: Wizard
   m_EditorClassIdentifier: 
+  CharactersName: Wizard
   CharacterSprites:
   - Name: Default
     Sprite: {fileID: 21300000, guid: a62d9c67fb805c84dbfe078196e99284, type: 3}
