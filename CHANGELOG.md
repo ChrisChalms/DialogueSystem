@@ -2,6 +2,19 @@
 
 All notable changes will be documented here.
 
+## [v0.7](https://github.com/ChrisChalms/DialogueSystem/commit/3f73ee4807ff224b43c541be98b815ee8240f849) - 21/05/2020
+
+### Added
+- Themes object to hold all sprites related to a theme
+- Theme repo
+- Action controller to handle the finding and execution of actions
+- Custom simple tag to change the theme
+- Action to change the theme
+
+### Changed
+- Moved most of the functionality from the ExampleUIController to the BaseUIController so it's easier to implement from fresh
+- Added and tidied up the example scene test conversation
+
 ## [v0.68](https://github.com/ChrisChalms/DialogueSystem/commit/026ff08ccca7e5488f13820f3463e26481135a8e) - 19/05/2020
 
 ### Added
