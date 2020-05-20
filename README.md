@@ -32,6 +32,7 @@ Each conversation file is made up of at least one dialogue object, there are a n
  - Speaker - The name of the person speaking
  - CharacterSpritesName - The name this character's sprites were registered under in the repo
  - StartingSprite - Used with CharacterSpritesName to show a character's sprite as soon as the conversation starts. You can also just have the CharacterSpritesName and the sprite "Default" will be looked for if this is blank
+ - Theme - The theme for this dialogue, must be registered in the theme repo. Can be left blank to not change the UI at all
  - Options - An option can be used to navigate to another dialogue, perform an action (v0.65 upwards), or both 
  - CanBeUsedAsStartingPoint - Whether to consider this or not as a starting position, default is true. Useful if the conversation has to go between multiple dialogues but can't be started from half way through
  - Conditional starting positions - As of v0.45 the dialogue controller can perform conditional tests on variables to decide where to start a conversation. e.g. In the example scene, once you've accepted the quest, the wizard reacts to how much gold you have. You can test all the the variable types that available for registration/retrieval in the variable repo. The dialogue will be evaluated and only be used as a starting point if all the conditions return true. Each condition requires:
@@ -116,6 +117,7 @@ Action are events that can be triggered from the dialogue text using the ```acti
   - Log Error
   - Close Conversation
   - Send Message
+  - Change Theme
   
 Here's an example of a conversation with five options that are triggered in different ways:
 
@@ -131,7 +133,9 @@ Here's an example of a conversation with five options that are triggered in diff
             [
                 "Let's perform some actions! From the dialogue <performAction=logNormal>?",
                 "Or let's just load a level <action=LoadLevel>.",
-                "Or load a certain level <actionWithMessage=LoadCertainLevel>NextLevel</actionWithMessage>"
+                "Or load a certain level <actionWithMessage=LoadCertainLevel>NextLevel</actionWithMessage>",
+                "Let's change the theme <action=ChangeToDark>",
+                "Or let's tell the action which on to change to<actionWithMessage=ChangeThemeTo>Default</actionWithMessage>."
             ],
             "options":
             [
@@ -188,9 +192,22 @@ Here's an example of a conversation with five options that are triggered in diff
 
         // Load a particular level
         {
-        	"name": "LoadCertainLevel",
+            "name": "LoadCertainLevel",
             "type": "sendMessage",
             "target": "GameObject Target"
+        },
+        
+        // Change the theme to dark
+        {
+            "name": "ChangeToDark",
+            "type": "changeTheme",
+            "message": "Dark"
+        },
+        
+        // Change to a theme, but let the action tell us which theme
+        {
+            "name": "ChangeThemeTo",
+            "type": "changeTheme"
         }
     ]
 }
@@ -216,6 +233,7 @@ As well as the standard rich text tags, there are three different types of custo
   - log - Logs a message via the DialogueLogger e.g. ```<log=A message from the conversation>```
   - logWarning - Logs a warning via the DialogueLogger e.g. ```<logWarning=A warning message from the conversation>```
   - logError - Logs an errer via the DialogueLogger e.g. ```<logError=An error message from the conversation>```
+  - changeTheme - Changes the theme of the UI to a theme registered in the theme repo e.g. ```<changeTheme=Dark>```
   
   #### Complex tags
   
@@ -268,6 +286,9 @@ They're all pretty straight forward to use:
  // Hide the character's sprite
  "Actually, I don't want you to see me..<hideSprite>."
  
+ // Change the theme
+ "Let's make the UI Darker <changeTheme=Dark>."
+ 
  // Perform an action to load a level
  "Let's go to the next area..<action=loadNextLevel>."
  
@@ -301,6 +322,9 @@ You can also manually register/retrieve/remove variables via the DialogueVariabl
  - ~~Advanced actions with tags to pass messages and targets~~
  - ~~Custom simple tag to execute an action from dialogue~~
  - ~~Logging complex tags~~
+ - ~~Add themes object and theme repo to swap~~
+ - ~~Simple tag and action to control theme~~
+ - ~~Theme change notifier to automatically change the UI elements~~
  - Add actions to more places?
  - A custom inspector to show registered variables, conversations, and sprites would be nice
  - Would like to add XML support
