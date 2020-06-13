@@ -1,7 +1,7 @@
 # Dialogue System
 
 A simple dialogue system for Unity with support for richtext tags, custom tags, and variable registration/retrieval/removal, conditional starting points, dialogue actions, and themes.
-[Video of v0.7 example scene](https://youtu.be/EemidLV_zkw)
+[Video of v0.8 example scene](https://youtu.be/fh8qhzU3C3U)
 
 ## Usage
 
@@ -27,9 +27,12 @@ Each conversation file is made up of at least one dialogue object, there are a n
  ```
  Here's some more options:
  - Id - The id of the dialogue. The dialogue controller will look for the highest id to start from (if all starting condition evaluations are true)
+ - Type - The type of conversation this is, you only need to change this if you want a non-default type. Currently there's only the default and background conversation types
  - Sentences - Array of the sentences that are queued
  - NextId - The Id of the dialogue to progress to after this one has finished
  - Speaker - The name of the person speaking
+ - AnchorObject - If this is a background conversation the anchor object can be used to position the dialogue box next to the object speaking.
+ - OnFinishedActions - This is an array of action names that will be performed automatically when the current dialogue has ended. Much the same as the option's selectedActions array
  - CharacterSpritesName - The name this character's sprites were registered under in the repo
  - StartingSprite - Used with CharacterSpritesName to show a character's sprite as soon as the conversation starts. You can also just have the CharacterSpritesName and the sprite "Default" will be looked for if this is blank
  - Theme - The theme for this dialogue, must be registered in the theme repo. Can be left blank to not change the UI at all
@@ -111,24 +114,26 @@ Each conversation file is made up of at least one dialogue object, there are a n
 ```
 
 ### Actions
-Action are events that can be triggered from the dialogue text using the ```action``` simple tag, or passed messages or targets using the complex tags ```actionWithMessage``` and ```actionWithTarget```, or an option using the ```selectedActions``` array. An option can contain multiple actions that will be executed in the order they're written in the array. The available action types are:
+Action are events that can be triggered from the dialogue text using the ```action``` simple tag, or passed messages or targets using the complex tags ```actionWithMessage``` and ```actionWithTarget```, or using an option's ```selectedActions``` array, or a dialogue's ```onFinishedActions``` array. An option's ```selectedActions``` or dialogue's ```onFinishedActions``` array can contain multiple actions that will be executed in the order they're written in the array. The available action types are:
   - Log
   - Log Warning
   - Log Error
   - Close Conversation
   - Send Message
   - Change Theme
+  - Start BG Conversation
+  - Close BG Conversations
   
-Here's an example of a conversation with five options that are triggered in different ways:
+Here's an example of a conversation with multiple actions that are triggered in different ways:
 
 ```javascript
-
 {
     "conversation":
     [
         // Conversation
         {
             "id": 1,
+            "onFinishActions": [ "StartBGConvo" ],
             "sentences":
             [
                 "Let's perform some actions! From the dialogue <performAction=logNormal>?",
@@ -208,6 +213,19 @@ Here's an example of a conversation with five options that are triggered in diff
         {
             "name": "ChangeThemeTo",
             "type": "changeTheme"
+        },
+
+        // Start a background conversation
+        {
+            "name": "StartBGConvo",
+            "type": "StartBGConversation",
+            "message": "BackgroundConvoFile"
+        },
+
+        // Close all BG conversaitons - Not used in the example
+        {
+            "name": "CloseAll",
+            "type": "CloseBGConversations"
         }
     ]
 }
@@ -220,7 +238,10 @@ As well as the standard rich text tags, there are three different types of custo
   
   #### Command Tags
   
-  Commands are the simplest custom tag, they don't require and value, content, or closing tags. Currently there is only one command, ```<hideSprite>```, which will hide the character's sprite box if it's showing
+  Commands are the simplest custom tag, they don't require and value, content, or closing tags. Currently there is only two command:
+  
+  - hideSprite - Hide the character's sprite box if it's showing e.g. ```<hideSprite>```
+  - closeBGConversations - Close any active background conversations e.g. ```<closeBGConversations>```
   
   #### Simple Tags
   
@@ -234,6 +255,7 @@ As well as the standard rich text tags, there are three different types of custo
   - logWarning - Logs a warning via the DialogueLogger e.g. ```<logWarning=A warning message from the conversation>```
   - logError - Logs an errer via the DialogueLogger e.g. ```<logError=An error message from the conversation>```
   - changeTheme - Changes the theme of the UI to a theme registered in the theme repo e.g. ```<changeTheme=Dark>```
+  - bgCoversation - Starts a background conversation if found, can have multiple active background conversations e.g. ```<bgConversation=ConversationToStart>```
   
   #### Complex tags
   
@@ -252,6 +274,7 @@ As well as the standard rich text tags, there are three different types of custo
     - registerString/retrieveString
  
 They're all pretty straight forward to use:
+
  ```javascript
  // Speed
  "A normal speed sentence, <speed=3>a lot slower. <speed=1>And back to normal speed again"
@@ -296,6 +319,10 @@ They're all pretty straight forward to use:
  "Let's load load a particular level <actionWithMessage=loadLevel>LevelToLoad</actionWithMessage>!"
  "Let's destroy things <actionWithTarget=destroyObject>Object/To/Destroy</actionWithTarget>"
  
+ // Background conversation
+ "I'm going to start thinking to myself in the backgorund<bgConversation=ConversationToStart>."
+ "Now I'll stop thinking in th ebackgorund<closeBGConversations>."
+
 
  ```
  
@@ -325,7 +352,9 @@ You can also manually register/retrieve/remove variables via the DialogueVariabl
  - ~~Add themes object and theme repo to swap~~
  - ~~Simple tag and action to control theme~~
  - ~~Theme change notifier to automatically change the UI elements~~
- - Add actions to more places?
+ - Add actions to more places? - Option selected, dialogue on finish
+ - ~~Background conversations~~
+ - ~~Tags and actions ot control background conversations~~
  - A custom inspector to show registered variables, conversations, and sprites would be nice
  - Would like to add XML support
  - Maybe some docs or a short walkthrough
