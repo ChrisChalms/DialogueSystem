@@ -52,22 +52,17 @@ public class OptionButton : MonoBehaviour
     public void Show()
     {
         _thisRect.anchoredPosition = new Vector2(_guideRect.anchoredPosition.x, OFF_Y);
+
         // Apply a random rotation to give it a little character
         _thisRect.rotation = Quaternion.Euler(0f, 0f, Random.Range(-ROTATION_MAX, ROTATION_MAX));
         _thisRect.DOAnchorPos(new Vector2(_guideRect.anchoredPosition.x, ON_Y), TWEEN_TIME).SetEase(Ease.OutQuad);
     }
 
     // Animate the button down
-    public void Hide()
-    {
-        _thisRect.DOAnchorPos(new Vector2(_guideRect.anchoredPosition.x, OFF_Y), TWEEN_TIME).SetEase(Ease.InQuad);
-    }
+    public void Hide() => _thisRect.DOAnchorPos(new Vector2(_guideRect.anchoredPosition.x, OFF_Y), TWEEN_TIME).SetEase(Ease.InQuad);
 
     // The option's been selected, tell the UI
-    public void OptionSelected()
-    {
-        _uiController.OptionButtonClicked(_buttonNumber);
-    }
+    public void OptionSelected() => _uiController.OptionButtonClicked(_buttonNumber);
 
     // Enable this button's guide object
     public void Enable()

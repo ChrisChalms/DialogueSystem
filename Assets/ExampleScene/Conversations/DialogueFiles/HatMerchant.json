@@ -47,7 +47,7 @@
 			"sentences":
 			[
 				"You haven't jumped yet!",
-				"Just bend you legs and..<speed=3>spring!"
+				"Just bend your legs and..<speed=3>spring!"
 			],
 			"startConditions":
 			[
@@ -87,6 +87,7 @@
 			"id": 5,
 			"speakersName": "Adventurer",
 			"canBeUsedAsStartingPoint": false,
+			"onFinishActions": ["startTalkingToYourself"],
 			"sentences":
 			[
 				"<size=30>This is so weird</size>"
@@ -154,9 +155,10 @@
 			"id": 7,
 			"speakersName": "Hat Merchant",
 			"characterSpritesName": "HatMerchant",
+			"onFinishActions": ["startTalkingToYourself"],
 			"sentences":
 			[
-				"Ahh, that's the stuff. Nothing quite like it. Here's your well earned reward, with an added bonus<registerbool=trackingJumps>false</registerbool><<registerbool=recievedJumpReward>true</registerbool><sendmessage=GameCanvas/Coins>Add17Coins</sendmessage>."
+				"Ahh, that's the stuff. Nothing quite like it. Here's your well earned reward, with an added bonus<registerbool=trackingJumps>false</registerbool><registerbool=recievedJumpReward>true</registerbool><sendmessage=GameCanvas/Coins>Add17Coins</sendmessage>."
 			],
 			"startConditions":
 			[
@@ -233,6 +235,16 @@
 					]
 				}
 			]
+		}
+	],
+
+	// Actions
+	"actions":
+	[
+		{
+			"name": "startTalkingToYourself",
+			"type": "startBGConversation",
+			"message": "HatMerchantBackground"
 		}
 	]
 }

@@ -11,10 +11,7 @@ public class TreasureChest : MonoBehaviour
     #region MonoBehaviour
 
     // Initialize
-    private void Start()
-    {
-        _animator = GetComponent<Animator>();
-    }
+    private void Start() => _animator = GetComponent<Animator>();
 
     #endregion
 

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 
 namespace CC.DialogueSystem
 {
-    // The idea is that this class goes through the sentence, before the UI gets it, strips and custom tags, and makes Modification objects for the UI to check for every letter
+    // The idea is that this class goes through the sentence, before the UI gets it, strips and custom tags, and makes Modification objects for the UI to check for every character
+    // TODO: Class name isn't really appropriate anymore, change it to something that makes more sense
     public class TextModifications
     {
         // Currently supported custom modifications
@@ -14,6 +14,7 @@ namespace CC.DialogueSystem
 
             // Command
             HIDE_SPRITE,
+            CLOSE_BG_CONVERSATIONS,
 
             // Simple
             SPEED,
@@ -24,6 +25,7 @@ namespace CC.DialogueSystem
             LOG_WARNING,
             LOG_ERROR,
             CHANGE_THEME,
+            BG_CONVERSATION,
 
             // Complex
             SEND_MESSAGE,
@@ -62,7 +64,6 @@ namespace CC.DialogueSystem
         // A little messy, could use a refactoring
         private void parseSentenceForCustomTags(string sentence)
         {
-
             // For parsing normal commands and retrievals
             var parsingCommand = false;
             var commandText = string.Empty;
@@ -237,6 +238,8 @@ namespace CC.DialogueSystem
             // Commands
             if (command.Contains("hidesprite"))
                 return Modifications.HIDE_SPRITE;
+            else if (command.Contains("closebgconversations"))
+                return Modifications.CLOSE_BG_CONVERSATIONS;
 
             // Complex
             // Must be checked before simple because of the action tag
@@ -294,6 +297,8 @@ namespace CC.DialogueSystem
                 return Modifications.LOG;
             else if (command.Contains("changetheme"))
                 return Modifications.CHANGE_THEME;
+            else if (command.Contains("bgconversation"))
+                return Modifications.BG_CONVERSATION;
                 
             return Modifications.NOT_CUSTOM;
         }
@@ -307,7 +312,8 @@ namespace CC.DialogueSystem
         // Returns whether the mod is a command
         private bool isCommandTag(Modifications mod)
         {
-            return (mod == Modifications.HIDE_SPRITE);
+            return (mod == Modifications.HIDE_SPRITE ||
+                mod == Modifications.CLOSE_BG_CONVERSATIONS);
         }
 
         // Returns whether the mod is a variable retrieval tag
@@ -360,7 +366,8 @@ namespace CC.DialogueSystem
                 modType == Modifications.LOG ||
                 modType == Modifications.LOG_WARNING ||
                 modType == Modifications.LOG_ERROR ||
-                modType == Modifications.CHANGE_THEME)
+                modType == Modifications.CHANGE_THEME ||
+                modType == Modifications.BG_CONVERSATION)
                 return commandText;
 
             // Parse float
@@ -424,7 +431,7 @@ namespace CC.DialogueSystem
     }
 
     // Class to store the simple modification information e.g. <command=value>
-    // A modification is considered simple if it's a simple name=value pattern with no content or closing tag
+    // A modification is considered simple if it has a name=value pattern with no content or closing tag
     public class SimpleModification : Command
     {
         public object ModificationValue { get; set; }

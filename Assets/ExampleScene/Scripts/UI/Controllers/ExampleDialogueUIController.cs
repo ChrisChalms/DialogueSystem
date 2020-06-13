@@ -80,8 +80,10 @@ public class ExampleDialogueUIController : BaseDialogueUIController
 
     #endregion
 
+    #region BaseDialogueUIController
+
     // Animate the sentence text and handle the custom tags
-    public override IEnumerator ShowSentence(string speaker, Sprite characterSprite, bool sameSpeakerAsLastDialogue = true, bool autoProceed = false)
+    protected override IEnumerator showSentence(string speaker, Sprite characterSprite, bool sameSpeakerAsLastDialogue = true, bool autoProceed = false)
     {
         _isAnimatingText = true;
         _nextArrow.Hide();
@@ -101,7 +103,6 @@ public class ExampleDialogueUIController : BaseDialogueUIController
         }
 
         // Check for and apply any mods, then progress through the sentence
-        // TODO: This should probably be moved elsewhere
         for (var i = 0; i < _currentTextMod?.Sentence.Length; i++)
         {
             yield return StartCoroutine(processTagsForPosition(i));
@@ -143,4 +144,6 @@ public class ExampleDialogueUIController : BaseDialogueUIController
         _nameBox.SetName(string.Empty);
         _optionButtons.HideOptions();
     }
+
+    #endregion
 }

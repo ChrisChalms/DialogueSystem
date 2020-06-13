@@ -55,7 +55,7 @@ namespace CC.DialogueSystem
                 case DialogueAction.Types.LOG_WARNING: DialogueLogger.LogWarning(action.Message); break;
                 case DialogueAction.Types.LOG_ERROR: DialogueLogger.LogError(action.Message); break;
 
-                case DialogueAction.Types.CLOSE_CONVERSATION: DialogueController.Instance.StopCurrentConversation(); break;
+                case DialogueAction.Types.CLOSE_CONVERSATION: DialogueController.Instance?.StopCurrentConversation(); break;
 
                 case DialogueAction.Types.SEND_MESSAGE:
                     var targetObject = GameObject.Find(action.Target);
@@ -69,7 +69,15 @@ namespace CC.DialogueSystem
                     break;
 
                 case DialogueAction.Types.CHANGE_THEME:
-                    DialogueController.Instance.ChangeTheme(action.Message);
+                    DialogueController.Instance?.ChangeTheme(action.Message);
+                    break;
+
+                case DialogueAction.Types.CLOSE_BG_CONVERSATIONS:
+                    BackgroundDialogueController.Instance?.CloseConversations();
+                    break;
+
+                case DialogueAction.Types.START_BG_CONVERSATION:
+                    BackgroundDialogueController.Instance?.StartConversation(action.Message);
                     break;
 
                 default:
@@ -114,6 +122,15 @@ namespace CC.DialogueSystem
                     if (string.IsNullOrEmpty(action.Message) || string.IsNullOrWhiteSpace(action.Message))
                     {
                         DialogueLogger.LogError($"An action with the name {action.Name} is trying to change the theme with an empty message value");
+                        return false;
+                    }
+                    break;
+
+                case DialogueAction.Types.START_BG_CONVERSATION:
+                    // Just need message, the name of the conversation to start
+                    if(string.IsNullOrEmpty(action.Message) || string.IsNullOrWhiteSpace(action.Message))
+                    {
+                        DialogueLogger.LogError($"An action with the name {action.Name} is trying to start a background conversation with an empty message value");
                         return false;
                     }
                     break;

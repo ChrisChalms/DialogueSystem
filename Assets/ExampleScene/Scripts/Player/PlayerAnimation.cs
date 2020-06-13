@@ -26,10 +26,7 @@ public class PlayerAnimation : MonoBehaviour
     }
     
     // Update animator
-    private void Update()
-    {
-        _animator.SetBool(_isGroundedHash, _collision.IsGrounded);
-    }
+    private void Update() => _animator.SetBool(_isGroundedHash, _collision.IsGrounded);
 
     #endregion
 
@@ -41,8 +38,5 @@ public class PlayerAnimation : MonoBehaviour
     }
 
     // Flip the sprite
-    public void Flip(int facingDir)
-    {
-        _spriteRend.flipX = facingDir == -1 ? true : false;
-    }
+    public void Flip(int facingDir) => _spriteRend.flipX = facingDir == -1 ? true : false;
 }

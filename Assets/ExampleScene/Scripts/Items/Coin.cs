@@ -8,10 +8,7 @@ public class Coin : MonoBehaviour
     #region MonoBehaviour
 
     // Initialize
-    private void Start()
-    {
-        _counter = GameObject.Find("GameCanvas/Coins").GetComponent<CoinCounter>();
-    }
+    private void Start() => _counter = GameObject.Find("GameCanvas/Coins").GetComponent<CoinCounter>();
 
     #endregion
 

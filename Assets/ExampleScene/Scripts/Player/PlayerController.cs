@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
         DialogueController.Instance.ConversationStarted += () =>_canMove = false;
         DialogueController.Instance.ConversationEnded += () => _canMove = true;
     }
+
     // Input loop
     private void Update()
     {

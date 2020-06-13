@@ -1,0 +1,75 @@
+{
+	"type": "background",
+	"conversation":
+    [
+    	// Got the jumping quest but haven't jumped
+		{
+			"id": 1,
+			"anchorObject": "Characters/HatMerchant",
+			"sentences":
+            [
+            	"Can't wait for the jump!",
+            	"Just a few more"
+			],
+			"startConditions":
+			[
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "trackingJumps"
+						},
+						{
+							"value": true,
+							"type": "bool"
+						}
+					]
+				},
+				{
+					"comparison": "<",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "playerJumps"
+						},
+						{
+							"value": 3,
+							"type": "int"
+						}
+					]
+				},
+			]
+		},
+
+		// Finished the quest and recieved our reward
+		{
+			"id": 2,
+			"anchorObject": "Characters/HatMerchant",
+			"sentences":
+			[
+				"..those jumps...",
+				"I will remember this day for the rest of my life"
+			],
+			"startConditions":
+			[
+				{
+					"comparison": "==",
+					"variables":
+					[
+						{
+							"fromRepo": true,
+							"name": "recievedJumpReward"
+						},
+						{
+							"value": true,
+							"type": "bool"
+						}
+					]
+				}
+			]
+		}
+	]
+}

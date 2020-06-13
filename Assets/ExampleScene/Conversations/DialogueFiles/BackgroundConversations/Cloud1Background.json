@@ -1,0 +1,16 @@
+{
+	"type": "background",
+	"conversation":
+	[
+		{
+			"id": 1,
+			"anchorObject": "Decorations/Background/Cloud1",
+			"sentences":
+			[
+				"I love being a cloud..",
+				"Just rain on whoever I want",
+				"The best"
+			]
+		}
+	]
+}

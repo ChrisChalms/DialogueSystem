@@ -41,20 +41,7 @@ namespace CC.DialogueSystem
         private void loadConversations()
         {
             foreach (var file in _conversationsToLoad)
-            {
-                var tempObject = _deserializer.Deserialize<Conversation>(file.text);
-                if (tempObject == null)
-                {
-                    DialogueLogger.LogError($"There was an error deserializing file {file.name}");
-                    return;
-                }
-
-                if (valdateConversation(tempObject, file.name))
-                {
-                    _conversations[file.name] = tempObject; // Overwrite without throwing
-                    tempObject.FinishedParsing();
-                }
-            }
+                RegisterConversation(file.name, file);
         }
 
         // Register and validate a conversation in real-time
@@ -67,7 +54,8 @@ namespace CC.DialogueSystem
                 return;
             }
 
-            if (valdateConversation(tempObject, file.name))
+            tempObject.PreValidation();
+            if (valdateConversation(tempObject, name))
             {
                 if (_conversations.ContainsKey(name))
                     DialogueLogger.LogWarning($"Conversation {name} already registered, overwritting");
@@ -110,15 +98,6 @@ namespace CC.DialogueSystem
 
                 // An action's message and target can be set in real time via the dialogue, so it'll have to be verified in the DialogueController.
                 // Verifiy all of the essential values here
-                switch (action.ActionType)
-                {
-                    case DialogueAction.Types.LOG:
-                    case DialogueAction.Types.LOG_WARNING:
-                    case DialogueAction.Types.LOG_ERROR:
-                        break;
-                    case DialogueAction.Types.SEND_MESSAGE: break;
-                    case DialogueAction.Types.CHANGE_THEME: break;
-                }
             }
 
             // Check number of dialogues
@@ -152,8 +131,19 @@ namespace CC.DialogueSystem
                 // Check the there's a CharacterSpriteName if we've sepecified a StartingSprite
                 if (!string.IsNullOrEmpty(diag.StartingSprite) && string.IsNullOrEmpty(diag.CharacterSpritesName))
                 {
-                    DialogueLogger.LogError($"Dialgue in file {fileName} has a startingSprite but no characterSpritesName is specified");
+                    DialogueLogger.LogError($"Dialogue in file {fileName} has a startingSprite but no characterSpritesName is specified");
                     return false;
+                }
+
+                // Check the OnFinishedActionNames
+                // Loop through all of the action and make sure they exist
+                foreach (var action in diag.OnFinishedActionNames)
+                {
+                    if (!actionNames.Contains(action))
+                    {
+                        DialogueLogger.LogError($"An dialogues OnFinishActions in file {fileName} attemps to call an action with the name {action} that doesn't exist.");
+                        return false;
+                    }
                 }
 
                 dialogueIds.Add(diag.Id);
@@ -286,6 +276,13 @@ namespace CC.DialogueSystem
                             return false;
                         }
                     }
+                }
+
+                // Warn if autoProceed is false and the conversation type is background, we'll autoproceed anyway
+                if (tempConversation.ConversationType == Conversation.Types.BACKGROUND)
+                {
+                    if (!diag.AutoProceed)
+                        DialogueLogger.LogWarning($"Dialogue in the file {fileName} is of type background and autoProceed is false. Background conversations always autoproceed");
                 }
             }
 

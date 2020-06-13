@@ -41,7 +41,6 @@ namespace CC.DialogueSystem
 
         #endregion
 
-        
         // Retrieve the sprite from the repo and apply it if it exists
         private void findAndChangeSprite(string name)
         {
@@ -63,9 +62,6 @@ namespace CC.DialogueSystem
         }
 
         // Get the sprite from the repo
-        protected virtual Sprite getSprite(string name, string spritename)
-        {
-            return ThemeRepo.Instance.RetrieveSprite(name, spritename);
-        }
+        protected virtual Sprite getSprite(string name, string spritename) => ThemeRepo.Instance.RetrieveSprite(name, spritename);
     }
 }

@@ -18,7 +18,7 @@ public class OptionsButtonController : MonoBehaviour
     #region MonoBehaviour
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _hzGroup = GetComponent<HorizontalLayoutGroup>();
         _buttons = GetComponentsInChildren<OptionButton>();

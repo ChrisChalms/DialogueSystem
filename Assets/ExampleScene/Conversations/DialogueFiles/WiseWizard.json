@@ -60,6 +60,7 @@
 			"id": 4,
 			"speakersName": "Wise Wizard",
 			"canBeUsedAsStartingPoint": false,
+			"onFinishActions": ["startThinking"],
 			"sentences":
 			[
 				"Fantastic. I knew I could trust you<registerbool=onQuest>true</registerbool><registerint=playerGold>0</registerint>.",
@@ -232,6 +233,16 @@
 					]
 				}
 			]
+		}
+	],
+
+	// Actions
+	"actions":
+	[
+		{
+			"name": "startThinking",
+			"type": "startBGConversation",
+			"message": "WiseWizardBackground"
 		}
 	]
 }

@@ -5,9 +5,38 @@ namespace CC.DialogueSystem
 {
     public class Conversation
     {
+        public enum Types
+        {
+            DEFAULT,
+            BACKGROUND
+        }
+
+        [JsonIgnore]
+        public Types ConversationType;
+        public string Type; // Type from JSON
         [JsonProperty("conversation")]
         public List<Dialogue> Dialogues = new List<Dialogue>();
         public List<DialogueAction> Actions = new List<DialogueAction>();
+
+        // Setup anything we need to do here before validating
+        public void PreValidation()
+        {
+            // Set the conversation type
+            switch (Type?.ToLower())
+            {
+                case "background": ConversationType = Types.BACKGROUND; break;
+            }
+
+            // Set the defaults for each type. Only using an extra switch in case an added conversation in the future has a lot of settings to change
+            switch(ConversationType)
+            {
+                case Types.BACKGROUND:
+                    // Stop validation warning
+                    foreach (var diag in Dialogues)
+                        diag.AutoProceed = true;
+                    break;
+            }
+        }
 
         // Let child classes know we've finished parsing and do any casts/prep needed
         public void FinishedParsing()
@@ -29,11 +58,14 @@ namespace CC.DialogueSystem
         public string Theme;
         public bool AutoProceed;
         public bool CanBeUsedAsStartingPoint = true;
+        public string AnchorObject; // The optional path to the object that's talking in the background.
 
         public List<Condition> StartConditions = new List<Condition>();
         public List<string> Sentences = new List<string>();
         public List<Option> Options = new List<Option>();
-
+        [JsonProperty("OnFinishActions")]
+        public List<string> OnFinishedActionNames = new List<string>();
+             
         // Let the conditions know they're ok to precast anything that needs it
         public void FinishedParsing()
         {
@@ -41,7 +73,7 @@ namespace CC.DialogueSystem
                 con.FinishedParsing();
         }
 
-        // Evaluest the starting conditions and return whether they all passed or one or more failed
+        // Evalues the starting conditions and return whether they all passed or one or more failed
         public bool EvaluateStartingConditions()
         {
             foreach (var con in StartConditions)
@@ -76,7 +108,9 @@ namespace CC.DialogueSystem
             LOG_ERROR,
             CLOSE_CONVERSATION,
             SEND_MESSAGE,
-            CHANGE_THEME
+            CHANGE_THEME,
+            CLOSE_BG_CONVERSATIONS,
+            START_BG_CONVERSATION
         }
 
         public string Name;
@@ -117,6 +151,14 @@ namespace CC.DialogueSystem
                 case "change_theme":
                 case "change theme":
                 case "changetheme": ActionType = Types.CHANGE_THEME; break;
+
+                case "close_bg_conversations":
+                case "close bg conversations":
+                case "closebgconversations": ActionType = Types.CLOSE_BG_CONVERSATIONS; break;
+
+                case "start_bg_conversation":
+                case "start bg conversation":
+                case "startbgconversation": ActionType = Types.START_BG_CONVERSATION; break;
 
                 default:
                     DialogueLogger.LogError($"Unsupported action type {Type} found in action with the name {Name}.");
@@ -189,7 +231,7 @@ namespace CC.DialogueSystem
             }
 
             // Evaluate
-            // We're using dynamics here, so be careful. We'll have to valudate types on the conversation load
+            // We're using dynamics here, so be careful. We'll have to validate types on the conversation load
             return _comparer.Execute(var1, var2);
         }
     }

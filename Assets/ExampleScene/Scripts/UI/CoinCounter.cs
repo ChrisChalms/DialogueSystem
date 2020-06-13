@@ -13,7 +13,7 @@ public class CoinCounter : MonoBehaviour
     #region MonoBehaviour
 
     // Initialize
-    void Start()
+    private void Start()
     {
         _coinIcon = GetComponent<Image>();
         _amountText = GetComponentInChildren<Text>();

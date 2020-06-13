@@ -27,16 +27,10 @@ public class DialogueBox : MonoBehaviour
     #endregion
 
     // Show the dialogue, with or without options
-    public void Show(bool options)
-    {
-        _thisRect.DOAnchorPosY(options ? SHOWING_OPTIONS_Y : ON_Y, TWEEN_TIME);
-    }
+    public void Show(bool options) => _thisRect.DOAnchorPosY(options ? SHOWING_OPTIONS_Y : ON_Y, TWEEN_TIME);
 
     // Hide the dialogue box
-    public void Hide()
-    {
-        _thisRect.DOAnchorPosY(OFF_Y, TWEEN_TIME);
-    }
+    public void Hide() => _thisRect.DOAnchorPosY(OFF_Y, TWEEN_TIME);
 
     // Sets the text ready for animating
     public void SetSentence(string sentence)
@@ -46,8 +40,5 @@ public class DialogueBox : MonoBehaviour
     }
 
     // Shows more of the text
-    public void IncrementVisibleCharacters()
-    {
-        _dialogueText.maxVisibleCharacters++;
-    }
+    public void IncrementVisibleCharacters() => _dialogueText.maxVisibleCharacters++;
 }

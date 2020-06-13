@@ -18,16 +18,14 @@ public class PlayerCollision : MonoBehaviour
     #region MonoBehaviour
     
     // Perform casts
-    private void Update()
-    {
-        IsGrounded = Physics2D.Raycast((Vector2)transform.position + _groundCastOffset, Vector2.down, _groundCheckDistance, _groundLayers);
-    }
+    private void Update() => IsGrounded = Physics2D.Raycast((Vector2)transform.position + _groundCastOffset, Vector2.down, _groundCheckDistance, _groundLayers);
 
     // Draw the ground check
     private void OnDrawGizmos()
     {
         if (!_drawCast)
             return;
+
         Gizmos.DrawLine((Vector2)transform.position + _groundCastOffset, new Vector2(transform.position.x + _groundCastOffset.x, transform.position.y + _groundCastOffset.y + _groundCheckDistance));
     }
 

@@ -4,22 +4,22 @@ using UnityEngine;
 
 namespace CC.DialogueSystem
 {
-    // A base for the UI controller that handles the seup for a sentence and tags, actual UI implementation by children
+    // A base for the UI controller that handles the setup for a sentence and tags, actual UI implementation by children
     public abstract class BaseDialogueUIController : MonoBehaviour
     {
         protected float _speedMultiplyer;
         protected TextModifications _currentTextMod;
 
-        // Pre ShowSentence()
-        public void PrepareToShowSentence(string speaker, TextModifications textMods, Sprite characterSprite, bool sameSpeakerAsLastDialogue = true, bool autoProceed = false)
+        // Prepare then show sentence
+        public void ShowSentence(string speaker, TextModifications textMods, Sprite characterSprite, bool sameSpeakerAsLastDialogue = true, bool autoProceed = false)
         {
             _speedMultiplyer = 1;
             _currentTextMod = textMods;
-            StartCoroutine(ShowSentence(speaker, characterSprite, sameSpeakerAsLastDialogue, autoProceed));
+            StartCoroutine(showSentence(speaker, characterSprite, sameSpeakerAsLastDialogue, autoProceed));
         }
 
         // Shows the sentence, implement in children
-        public virtual IEnumerator ShowSentence(string speaker, Sprite characterSprite, bool sameSpeakerAsLastDialogue = true, bool autoProceed = false) => null;
+        protected virtual IEnumerator showSentence(string speaker, Sprite characterSprite, bool sameSpeakerAsLastDialogue = true, bool autoProceed = false) => null;
 
         // If you're UI supports tags, use this to execute all tags at a given position in the sentence
         protected IEnumerator processTagsForPosition(int index)
@@ -32,12 +32,14 @@ namespace CC.DialogueSystem
                 // Commands
                 if (mod.ModType == TextModifications.Modifications.HIDE_SPRITE)
                     hideCharacterSprite();
+                else if (mod.ModType == TextModifications.Modifications.CLOSE_BG_CONVERSATIONS)
+                    BackgroundDialogueController.Instance?.CloseConversations();
 
                 // Simple modifications e.g. <command=value>
                 else if (mod.ModType == TextModifications.Modifications.SPEED)
                     _speedMultiplyer = (mod as SimpleModification).GetValue<float>();
                 else if (mod.ModType == TextModifications.Modifications.REMOVE_VARAIBLE)
-                    VariableRepo.Instance.Remove((mod as SimpleModification).GetValue<string>());
+                    VariableRepo.Instance?.Remove((mod as SimpleModification).GetValue<string>());
                 else if (mod.ModType == TextModifications.Modifications.WAIT)
                     yield return new WaitForSeconds((mod as SimpleModification).GetValue<float>());
                 else if (mod.ModType == TextModifications.Modifications.ACTION)
@@ -49,7 +51,9 @@ namespace CC.DialogueSystem
                 else if (mod.ModType == TextModifications.Modifications.LOG_ERROR)
                     DialogueLogger.LogError((mod as SimpleModification).GetValue<string>());
                 else if (mod.ModType == TextModifications.Modifications.CHANGE_THEME)
-                    DialogueController.Instance.ChangeTheme((mod as SimpleModification).GetValue<string>());
+                    DialogueController.Instance?.ChangeTheme((mod as SimpleModification).GetValue<string>());
+                else if (mod.ModType == TextModifications.Modifications.BG_CONVERSATION)
+                    BackgroundDialogueController.Instance?.StartConversation((mod as SimpleModification).GetValue<string>());
 
                 // Complex modifications e.g. <command=value>content</command>
                 else if (mod.ModType == TextModifications.Modifications.SEND_MESSAGE)
@@ -75,11 +79,13 @@ namespace CC.DialogueSystem
         // Implement the below if you UI has options
         public virtual void ShowOptions(List<Option> options) { }
 
+        // An option has been selected
         public virtual void OptionButtonClicked(int index) { }
 
         // Implement the below if your UI has character sprites
         protected virtual void changeCharacterSprite(Sprite newSprite) { }
 
+        // Hide the sprite if showing
         protected virtual void hideCharacterSprite() { }
 
         // Hide all your UI elements

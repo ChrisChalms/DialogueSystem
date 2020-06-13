@@ -4,9 +4,6 @@ namespace CC.DialogueSystem
 {
     public class JSONDeserializer : IDeserializer
     {
-        public T Deserialize<T>(string text)
-        {
-            return JsonConvert.DeserializeObject<T>(text);
-        }
+        public T Deserialize<T>(string text) => JsonConvert.DeserializeObject<T>(text);
     }
 }

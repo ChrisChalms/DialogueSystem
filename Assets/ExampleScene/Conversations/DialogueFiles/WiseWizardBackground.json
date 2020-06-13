@@ -1,0 +1,16 @@
+{
+	"type": "background",
+	"conversation":
+    [
+    	// Conversation
+		{
+			"id": 1,
+			"anchorObject": "Characters/WiseWizard",
+			"sentences":
+            [
+            	"That new hat will be mine in no time!",
+            	"Hahahaha"
+			]
+		}
+	]
+}
