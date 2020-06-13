@@ -2,6 +2,22 @@
 
 All notable changes will be documented here.
 
+## [v0.8](https://github.com/ChrisChalms/DialogueSystem/commit/f5883927b957059fc7b485bd9d3d621f19a2aea9) - 13/06/2020
+
+### Added
+- Conversation types
+- Backgorund conversation type added with new controller and example UI
+- AnchorObject field added the conversation model
+- OnFinishActions array added to the dialogue class
+- CloseBGConversations command
+- CloseBGConversations action added
+- bgConversation simple tag added
+- New background conversations to the exmaple scene
+
+### Changed
+- ConversationRepo loading simplified a bit more
+- Example scene changed to include new features
+
 ## [v0.7](https://github.com/ChrisChalms/DialogueSystem/commit/3f73ee4807ff224b43c541be98b815ee8240f849) - 21/05/2020
 
 ### Added
