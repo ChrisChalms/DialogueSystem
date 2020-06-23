@@ -1,5 +1,6 @@
 ﻿#pragma warning disable 649
 
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -32,17 +33,13 @@ namespace CC.DialogueSystem
         private void checkLayer(int layer, bool entry)
         {
             // Early out if we're not allowed to trigger
-            if (!_canBeTriggeredMultipleTimes)
-            {
-                if (_triggered)
-                    return;
-                else
-                    _triggered = true;
-            }
+            if (!_canBeTriggeredMultipleTimes && _triggered)
+                return;
 
             // Check the layer mask
             if ((_triggerableLayers & 1 << layer) == 1 << layer)
             {
+                _triggered = true;
                 // Successfully triggered, invoke event
                 if (entry)
                     _onEnterEvent.Invoke();
