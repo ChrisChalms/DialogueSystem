@@ -2,6 +2,13 @@
 
 All notable changes will be documented here.
 
+## [v0.82](https://github.com/ChrisChalms/DialogueSystem/commit/7a771cd303207282f89329d427582ebf4a93ea11) - 25/10/2021
+
+### Changed
+- Made the conversation loading a little nicer
+- StartConversation must now be implemented by children of BaseDialogueController
+- Added a LogPrefix to the Logger 
+
 ## [v0.8](https://github.com/ChrisChalms/DialogueSystem/commit/f5883927b957059fc7b485bd9d3d621f19a2aea9) - 13/06/2020
 
 ### Added
