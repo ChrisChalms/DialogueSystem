@@ -2,8 +2,11 @@
 
 namespace CC.DialogueSystem
 {
-    public class BaseDialogueController : MonoBehaviour
+    public abstract class BaseDialogueController : MonoBehaviour
     {
+        public abstract void StartConversation(string convoName);
+        public abstract void StartConversation(Conversation conversation);
+
         #region Helpers
 
         // Get the conversation from the repo if it exists

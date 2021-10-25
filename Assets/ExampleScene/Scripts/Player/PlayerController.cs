@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
     private float _jumpForce;
 
     private Rigidbody2D _rb;
-    private DialogueController _dialogueController; // Maybe it should be a singleton?
     private PlayerAnimation _animation;
     private PlayerCollision _collision;
 
@@ -34,7 +33,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _dialogueController = GameObject.Find("DialogueController").GetComponent<DialogueController>();
         _animation = GetComponentInChildren<PlayerAnimation>();
         _collision = GetComponent<PlayerCollision>();
 
@@ -95,10 +93,11 @@ public class PlayerController : MonoBehaviour
         _pressingJump = Input.GetKeyDown(KeyCode.Space);
         if (_pressingJump)
             jump();
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (!string.IsNullOrEmpty(_hittingCharacter))
-                _dialogueController.StartConversation(_hittingCharacter);
+                DialogueController.Instance.StartConversation(_hittingCharacter);
         }
     }
 

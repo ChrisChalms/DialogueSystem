@@ -13,10 +13,8 @@ namespace CC.DialogueSystem
         public event Action ConversationEnded;
         public event Action<string> ThemeChanged;
 
-        [SerializeField]
-        private DialogueLogger.LogLevel _logLevel;
-        [SerializeField]
-        private BaseDialogueUIController _uiController;
+        [SerializeField] private DialogueLogger.LogLevel _logLevel;
+        [SerializeField] private BaseDialogueUIController _uiController;
 
         private Conversation _currentConversation;
         private Dialogue _currentDialogue;
@@ -42,7 +40,7 @@ namespace CC.DialogueSystem
         #endregion
 
         // Find and start the conversation
-        public void StartConversation(string convoName)
+        public override void StartConversation(string convoName)
         {
             var tempConvo = findConversation(convoName);
 
@@ -61,7 +59,7 @@ namespace CC.DialogueSystem
         }
 
         // Start the conversation if possible
-        public void StartConversation(Conversation conversation)
+        public override void StartConversation(Conversation conversation)
         {
             if (_inConversation)
             {

@@ -4,6 +4,8 @@ namespace CC.DialogueSystem
 {
     public class DialogueLogger
     {
+        const string LogPrefix = "[DialogueSystem] ";
+
         public enum LogLevel
         {
             DEBUG,
@@ -23,7 +25,7 @@ namespace CC.DialogueSystem
             if (CurrentLogLevel > 0)
                 return;
 
-            Debug.Log(message);
+            Debug.Log(LogPrefix + message);
         }
 
         public static void LogWarning(string message)
@@ -31,9 +33,9 @@ namespace CC.DialogueSystem
             if (CurrentLogLevel > 1)
                 return;
 
-            Debug.LogWarning(message);
+            Debug.LogWarning(LogPrefix + message);
         }
 
-        public static void LogError(string message) => Debug.LogError(message);
+        public static void LogError(string message) => Debug.LogError(LogPrefix + message);
     }
 }

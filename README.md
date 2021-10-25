@@ -3,6 +3,34 @@
 A simple dialogue system for Unity with support for richtext tags, custom tags, and variable registration/retrieval/removal, conditional starting points, dialogue actions, and themes.
 [Video of v0.8 example scene](https://youtu.be/fh8qhzU3C3U)
 
+## Registering and Starting Conversations
+For a conversation to be started it needs to first be registered with the ```ConversationRepo``` then started via a ```DialogueController```. This can be done via code, attachable MonoBehaviour scipts, or a mixture of both.
+
+### Registering 
+There's a few different methods for loading a conversation via attachable MonoBehaviour script, the first is to add the conversation JSON file into the ```ConversationsToLoad``` list on the ```ConversationRepo``` GameObject, which get loaded automatically when the repo is initialised. It's important to note that this method will use the file's name as the conversation name e.g. if you load a conversation called ```TestConversation``` using this method, you will need to use the file name ```TestConversation``` to start the dialogue.
+
+You can also register a conversation using the ```ConversationLoader``` script that can be attached to a GameObject. This gives you the most control as you can give the conversation a name that it will be registered under and whether it'll be loaded on startup or not. The ```ConversationLoader``` also contains a method that can be called manually if you'd like the conversation to be loaded at a different time. There's an example of this in the exmaple scene, the object ```Characters->Testing Conversation``` isn't loaded on startup, but via the helper ```EventTrigger``` script attached to ```Triggers->EventTriggerExample```. In that scene it's used to load the conversation as the player approaches the character.
+
+### Starting the Conversation
+All that's needed to start a conversation is for ```DialogueController.StartConversation(string)``` to be called, that can be anyway you'd like. I've added layer masking to the ```EventTrigger``` to make it easier to start a conversation without any code, just pass the name of the conversation.
+
+The above steps can be achieved via code as well:
+```c#
+
+// Get the TextAsset from wherever you have it saved
+var conversationAsset = Resources.Load<TextAsset>(pathToAsset);
+
+// Make sure it's registered at some point before starting the conversation
+ConversationRepo.Instance.RegisterConversation(convoName, conversationAsset);
+
+// Start the conversation
+DialogueController.Instance.StartConversation(convoName);
+
+// Or, if you have the Conversation object
+DialogueController.Instance.StartConversation(convoObject);
+
+```
+
 ## Usage
 
 Each conversation file is made up of at least one dialogue object, there are a number of different option for the objects, but the only thing that's actually required is an id and some sentences.
@@ -355,6 +383,8 @@ You can also manually register/retrieve/remove variables via the DialogueVariabl
  - Add actions to more places? - Option selected, dialogue on finish
  - ~~Background conversations~~
  - ~~Tags and actions ot control background conversations~~
+ - ~~Streamline loading and starting conversations through code~~
+ - Take a pass at the code and do any refactors needed, there's probably a lot that can be improved
  - A custom inspector to show registered variables, conversations, and sprites would be nice
  - Would like to add XML support
  - Maybe some docs or a short walkthrough

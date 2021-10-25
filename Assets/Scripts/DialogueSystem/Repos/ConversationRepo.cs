@@ -8,7 +8,6 @@ namespace CC.DialogueSystem
     // Parses and stores all the conversations for this scene. 
     public class ConversationRepo : MonoBehaviour
     {
-
         [SerializeField]
         private List<TextAsset> _conversationsToLoad;
 
@@ -47,6 +46,20 @@ namespace CC.DialogueSystem
         // Register and validate a conversation in real-time
         public void RegisterConversation(string name, TextAsset file)
         {
+            // Can't load if there's no name
+            if (string.IsNullOrEmpty(name))
+            {
+                DialogueLogger.LogError("Cannot register a conversation without a name");
+                return;
+            }
+
+            // Can't load if there's no conversation
+            if (file == null)
+            {
+                DialogueLogger.LogError("Cannot register a conversation without a conversation file");
+                return;
+            }
+
             var tempObject = _deserializer.Deserialize<Conversation>(file.text);
             if (tempObject == null)
             {

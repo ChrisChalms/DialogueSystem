@@ -28,7 +28,7 @@ namespace CC.DialogueSystem
         #endregion
 
         // Find in the repo and start
-        public void StartConversation(string convoName)
+        public override void StartConversation(string convoName)
         {
             var tempConvo = findConversation(convoName);
 
@@ -47,7 +47,7 @@ namespace CC.DialogueSystem
         }
 
         // Already found, just start
-        public void StartConversation(Conversation conversation)
+        public override void StartConversation(Conversation conversation)
         {
             if (_uiControllerPrefab == null)
             {
@@ -66,7 +66,7 @@ namespace CC.DialogueSystem
             tempObject.Initialize(conversation);
         }
 
-        // Close all background conversations.
+        // Close all background conversations
         public void CloseConversations() => CloseConversation?.Invoke();
     }
 }
